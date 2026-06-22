@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <linearGradient id="gPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#1F73D9"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5BD980"/>
+      <stop offset="100%" stop-color="#258F44"/>
+    </linearGradient>
+    <linearGradient id="gDanger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7070"/>
+      <stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <linearGradient id="goldTitle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="55%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#C9990A"/>
+    </linearGradient>
+    <linearGradient id="gPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252B45"/>
+      <stop offset="100%" stop-color="#181D30"/>
+    </linearGradient>
+    <linearGradient id="gBgVert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="bgSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/><stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <linearGradient id="warnRing" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF8C8C"/><stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <radialGradient id="warnGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F23F3F" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#F23F3F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Dimmed menu underneath -->
+  <rect width="1920" height="1080" fill="url(#bgSky)"/>
+  <g opacity="0.2">
+    <text x="960" y="320" text-anchor="middle" font-size="160" font-weight="900" fill="#FFD933" letter-spacing="8">STICK ARCHER</text>
+    <rect x="440" y="500" width="640" height="140" rx="70" fill="#268CF2"/>
+  </g>
+  <rect width="1920" height="1080" fill="rgba(0,0,0,0.7)"/>
+
+  <!-- ==== ERROR MODAL ==== -->
+  <g transform="translate(560,220)" filter="url(#shadowDeep)">
+    <rect width="800" height="660" rx="36" fill="url(#gPanel)" stroke="rgba(242,63,63,0.3)" stroke-width="2"/>
+
+    <!-- Top warning band -->
+    <rect width="800" height="6" rx="3" fill="url(#warnRing)"/>
+
+    <!-- Warning glow + triangle icon -->
+    <g transform="translate(400,180)">
+      <circle r="160" fill="url(#warnGlow)"/>
+      <g>
+        <polygon points="0,-90 100,80 -100,80" fill="url(#warnRing)" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+        <rect x="-8" y="-40" width="16" height="60" rx="3" fill="#FFFFFF"/>
+        <rect x="-8" y="36" width="16" height="16" rx="3" fill="#FFFFFF"/>
+      </g>
+    </g>
+
+    <!-- Title -->
+    <text x="400" y="340" text-anchor="middle" font-size="52" font-weight="900" fill="#FFFFFF" letter-spacing="6">CONNECTION LOST</text>
+
+    <!-- Description -->
+    <text x="400" y="396" text-anchor="middle" font-size="22" font-weight="500" fill="rgba(255,255,255,0.7)">
+      <tspan>The connection to the server was interrupted.</tspan>
+    </text>
+    <text x="400" y="426" text-anchor="middle" font-size="22" font-weight="500" fill="rgba(255,255,255,0.7)">
+      <tspan>Your match could not be completed.</tspan>
+    </text>
+
+    <!-- Error code -->
+    <g transform="translate(280,460)">
+      <rect width="240" height="40" rx="20" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)"/>
+      <text x="120" y="28" text-anchor="middle" font-size="16" font-weight="600" fill="rgba(255,255,255,0.55)" letter-spacing="3">ERROR · DISCONNECT_BY_PEER</text>
+    </g>
+
+    <!-- Buttons -->
+    <g transform="translate(60,540)" filter="url(#shadowDeep)">
+      <rect width="320" height="80" rx="40" fill="url(#gPrimary)"/>
+      <!-- retry icon -->
+      <g transform="translate(58,40)" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-11 -9 A14 14 0 1 1 -13 9"/>
+        <path d="M-11 -16 L-11 -6 L-1 -6"/>
+      </g>
+      <text x="200" y="52" text-anchor="middle" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="3">RETRY</text>
+    </g>
+
+    <g transform="translate(420,540)">
+      <rect width="320" height="80" rx="40" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"/>
+      <!-- back chevron -->
+      <g transform="translate(58,40)" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 -13 L-11 0 L2 13"/>
+        <line x1="-11" y1="0" x2="15" y2="0"/>
+      </g>
+      <text x="200" y="52" text-anchor="middle" font-size="26" font-weight="700" fill="rgba(255,255,255,0.85)" letter-spacing="3">MAIN MENU</text>
+    </g>
+  </g>
+
+  <!-- Auto-retry status -->
+  <g transform="translate(960,910)" text-anchor="middle">
+    <text font-size="18" font-weight="500" fill="rgba(255,255,255,0.45)" letter-spacing="3">Auto-retry in 5s · Tap RETRY to reconnect now</text>
+  </g>
+
+  <text x="40" y="40" font-size="14" fill="rgba(255,255,255,0.45)">10 — ERROR / CONNECTION LOST · 1920×1080</text>
+</svg>

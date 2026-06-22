@@ -1,0 +1,236 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <linearGradient id="gPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#1F73D9"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5BD980"/>
+      <stop offset="100%" stop-color="#258F44"/>
+    </linearGradient>
+    <linearGradient id="gDanger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7070"/>
+      <stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <linearGradient id="goldTitle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="55%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#C9990A"/>
+    </linearGradient>
+    <linearGradient id="gPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252B45"/>
+      <stop offset="100%" stop-color="#181D30"/>
+    </linearGradient>
+    <linearGradient id="gBgVert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Sky gradient -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7BB8E8"/>
+      <stop offset="60%" stop-color="#A8D2EE"/>
+      <stop offset="100%" stop-color="#E5C99A"/>
+    </linearGradient>
+    <linearGradient id="hpFull" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#33B859"/>
+      <stop offset="100%" stop-color="#5BD980"/>
+    </linearGradient>
+    <linearGradient id="hpLow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F28C1A"/>
+      <stop offset="100%" stop-color="#F23F3F"/>
+    </linearGradient>
+    <linearGradient id="chargeGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#33B859"/>
+      <stop offset="50%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#F23F3F"/>
+    </linearGradient>
+    <linearGradient id="panelHud" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(15,20,33,0.85)"/>
+      <stop offset="100%" stop-color="rgba(31,36,56,0.85)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ===== GAMEPLAY SCENE (underneath HUD) ===== -->
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+
+  <!-- Clouds -->
+  <g fill="#FFFFFF" opacity="0.85">
+    <ellipse cx="280" cy="220" rx="80" ry="22"/><ellipse cx="320" cy="200" rx="60" ry="18"/>
+    <ellipse cx="1280" cy="260" rx="100" ry="26"/><ellipse cx="1340" cy="240" rx="70" ry="20"/>
+    <ellipse cx="1620" cy="180" rx="80" ry="22"/>
+  </g>
+
+  <!-- Far mountains -->
+  <path d="M0 700 L260 540 L460 620 L720 500 L960 600 L1240 520 L1520 620 L1740 540 L1920 600 L1920 1080 L0 1080 Z" fill="#7898AC" opacity="0.6"/>
+  <!-- Near mountains -->
+  <path d="M0 780 L200 680 L420 760 L640 660 L880 740 L1140 670 L1380 760 L1640 680 L1920 720 L1920 1080 L0 1080 Z" fill="#5A7488"/>
+
+  <!-- Ground -->
+  <rect y="820" width="1920" height="260" fill="#7BA850"/>
+  <rect y="820" width="1920" height="8" fill="#5C8A38"/>
+  <!-- grass tufts -->
+  <g fill="#5C8A38">
+    <path d="M120 820 L130 800 L140 820 Z"/><path d="M280 820 L292 798 L304 820 Z"/>
+    <path d="M580 820 L590 802 L600 820 Z"/><path d="M820 820 L832 800 L844 820 Z"/>
+    <path d="M1340 820 L1352 798 L1364 820 Z"/><path d="M1700 820 L1710 802 L1720 820 Z"/>
+  </g>
+
+  <!-- Platforms -->
+  <g>
+    <rect x="180" y="700" width="320" height="40" rx="6" fill="#8B5A2B"/>
+    <rect x="180" y="700" width="320" height="8" fill="#7BA850"/>
+    <rect x="1420" y="700" width="320" height="40" rx="6" fill="#8B5A2B"/>
+    <rect x="1420" y="700" width="320" height="8" fill="#7BA850"/>
+    <rect x="800" y="620" width="320" height="40" rx="6" fill="#8B5A2B"/>
+    <rect x="800" y="620" width="320" height="8" fill="#7BA850"/>
+  </g>
+
+  <!-- ARCHER 1 (Adventurer) - on left platform, charging -->
+  <g transform="translate(280,580)">
+    <ellipse cy="120" rx="36" ry="6" fill="#000000" opacity="0.3"/>
+    <rect x="-16" y="0" width="32" height="60" rx="6" fill="#3A7A4D"/>
+    <rect x="-16" y="60" width="14" height="50" rx="3" fill="#4A2E1A"/>
+    <rect x="2" y="60" width="14" height="50" rx="3" fill="#4A2E1A"/>
+    <circle cy="-32" r="22" fill="#F2C29B"/>
+    <path d="M-22 -42 Q-18 -57 0 -58 Q17 -56 22 -42 L18 -36 Q12 -47 5 -48 L3 -38 L-5 -49 L-10 -38 L-18 -48 Q-20 -45 -18 -36 Z" fill="#5A3A1F"/>
+    <circle cx="8" cy="-34" r="2.5" fill="#1A1A1A"/>
+    <path d="M14 -29 Q20 -27 14 -24" fill="none" stroke="#D69A75" stroke-width="2" stroke-linecap="round"/>
+    <!-- bow drawn -->
+    <path d="M44 -10 Q70 30 44 70" fill="none" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M44 -10 L32 30 L44 70" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    <!-- arrow nocked -->
+    <line x1="-36" y1="30" x2="36" y2="30" stroke="#FFFFFF" stroke-width="2"/>
+    <polygon points="36,30 28,26 28,34" fill="#FFD933"/>
+  </g>
+
+  <!-- ARCHER 2 (Soldier) - on right platform -->
+  <g transform="translate(1580,580)">
+    <ellipse cy="120" rx="36" ry="6" fill="#000000" opacity="0.3"/>
+    <rect x="-16" y="0" width="32" height="60" rx="6" fill="#2E5BAA"/>
+    <rect x="-16" y="60" width="14" height="50" rx="3" fill="#4A2E1A"/>
+    <rect x="2" y="60" width="14" height="50" rx="3" fill="#4A2E1A"/>
+    <circle cy="-32" r="22" fill="#F2C29B"/>
+    <path d="M-22 -36 Q-23 -58 0 -60 Q23 -58 22 -36 L14 -40 Q8 -48 0 -48 Q-10 -48 -18 -40 Z" fill="#C9A55E"/>
+    <rect x="-22" y="-42" width="44" height="6" rx="1" fill="#A0823F"/>
+    <circle cx="-8" cy="-32" r="2.5" fill="#1A1A1A"/>
+    <path d="M-14 -29 Q-20 -27 -14 -24" fill="none" stroke="#D69A75" stroke-width="2" stroke-linecap="round"/>
+    <path d="M-44 -10 Q-70 30 -44 70" fill="none" stroke="#8B5A2B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-44 -10 L-32 30 L-44 70" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    <line x1="32" y1="30" x2="-36" y2="30" stroke="#FFFFFF" stroke-width="2"/>
+    <polygon points="-36,30 -28,26 -28,34" fill="#FFD933"/>
+  </g>
+
+  <!-- Arrow in flight -->
+  <g transform="translate(900,400) rotate(-12)">
+    <line x1="-60" y1="0" x2="40" y2="0" stroke="#3A2200" stroke-width="3"/>
+    <polygon points="40,0 28,-6 28,6" fill="#3A2200"/>
+    <path d="M-60 0 L-70 -6 M-60 0 L-70 6 M-66 0 L-72 -4 M-66 0 L-72 4" stroke="#3A2200" stroke-width="2"/>
+    <!-- speed lines -->
+    <line x1="-90" y1="-2" x2="-72" y2="-2" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+    <line x1="-86" y1="4" x2="-70" y2="4" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+  </g>
+
+  <!-- ============================================== -->
+  <!-- ===== HUD OVERLAY ===== -->
+  <!-- ============================================== -->
+
+  <!-- Safe-area indicator (subtle, just shows the boundary) -->
+  <rect x="30" y="30" width="1860" height="1020" rx="20" fill="none" stroke="rgba(255,255,255,0.04)" stroke-dasharray="4 8"/>
+
+  <!-- ==== PLAYER 1 HUD (top-left) ==== -->
+  <g transform="translate(40,40)" filter="url(#shadowDeep)">
+    <rect width="540" height="120" rx="60" fill="url(#gPanel)" stroke="rgba(255,255,255,0.12)"/>
+    <!-- Score circle -->
+    <g transform="translate(60,60)">
+      <circle r="48" fill="url(#gGold)"/>
+      <circle r="42" fill="#FFD933" stroke="#1A1A1A" stroke-width="2"/>
+      <text y="16" text-anchor="middle" font-size="42" font-weight="900" fill="#1A1A1A">3</text>
+    </g>
+    <!-- Player name -->
+    <text x="130" y="42" font-size="22" font-weight="700" fill="#FFFFFF">ArcherPro_42</text>
+    <!-- Health bar -->
+    <g transform="translate(130,64)">
+      <rect width="380" height="24" rx="12" fill="#0F1421"/>
+      <rect width="278" height="24" rx="12" fill="url(#hpFull)"/>
+      <text x="190" y="17" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">73 / 100</text>
+    </g>
+  </g>
+
+  <!-- ==== PLAYER 2 HUD (top-right) ==== -->
+  <g transform="translate(1340,40)" filter="url(#shadowDeep)">
+    <rect width="540" height="120" rx="60" fill="url(#gPanel)" stroke="rgba(255,255,255,0.12)"/>
+    <!-- Score circle on right -->
+    <g transform="translate(480,60)">
+      <circle r="48" fill="url(#gGold)"/>
+      <circle r="42" fill="#FFD933" stroke="#1A1A1A" stroke-width="2"/>
+      <text y="16" text-anchor="middle" font-size="42" font-weight="900" fill="#1A1A1A">2</text>
+    </g>
+    <!-- Player name -->
+    <text x="410" y="42" text-anchor="end" font-size="22" font-weight="700" fill="#FFFFFF">QuickShot_X</text>
+    <!-- Health (low) -->
+    <g transform="translate(30,64)">
+      <rect width="380" height="24" rx="12" fill="#0F1421"/>
+      <rect width="125" height="24" rx="12" fill="url(#hpLow)"/>
+      <text x="190" y="17" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">33 / 100</text>
+    </g>
+  </g>
+
+  <!-- ==== WIND INDICATOR ==== -->
+  <g transform="translate(960,170)" text-anchor="middle" filter="url(#shadowSoft)">
+    <rect x="-90" y="-22" width="180" height="44" rx="22" fill="url(#gPanel)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="-50" y="6" font-size="16" font-weight="500" fill="rgba(255,255,255,0.6)" letter-spacing="2">WIND</text>
+    <g transform="translate(20,0)">
+      <line x1="-20" y1="0" x2="20" y2="0" stroke="#33B859" stroke-width="2"/>
+      <polygon points="20,0 14,-5 14,5" fill="#33B859"/>
+    </g>
+    <text x="58" y="6" font-size="16" font-weight="700" fill="#33B859">2.4</text>
+  </g>
+
+  <!-- ==== PAUSE BUTTON (top-center) ==== -->
+  <g transform="translate(960,80)" filter="url(#shadowDeep)">
+    <circle r="48" fill="url(#gPanel)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <rect x="-14" y="-18" width="10" height="36" rx="2" fill="#FFFFFF"/>
+    <rect x="4" y="-18" width="10" height="36" rx="2" fill="#FFFFFF"/>
+  </g>
+
+  <!-- ==== CHARGE METER (bottom center) ==== -->
+  <g transform="translate(560,960)" filter="url(#shadowDeep)">
+    <rect width="800" height="80" rx="40" fill="url(#gPanel)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="24" y="32" font-size="14" font-weight="700" fill="rgba(255,255,255,0.55)" letter-spacing="4">CHARGE</text>
+    <text x="776" y="32" text-anchor="end" font-size="14" font-weight="700" fill="#F23F3F" letter-spacing="2">MAX!</text>
+    <!-- Charge fill -->
+    <g transform="translate(24,44)">
+      <rect width="752" height="24" rx="12" fill="#0A0E1C"/>
+      <rect width="715" height="24" rx="12" fill="url(#chargeGrad)"/>
+      <!-- markers -->
+      <line x1="251" y1="-4" x2="251" y2="28" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <line x1="502" y1="-4" x2="502" y2="28" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <!-- tip indicator -->
+      <polygon points="715,-6 723,4 707,4" fill="#FFFFFF" filter="url(#shadowDeep)"/>
+    </g>
+  </g>
+
+  <!-- ==== TAP TO FIRE HINT (centered, fades) ==== -->
+  <g transform="translate(960,900)" text-anchor="middle" opacity="0.7">
+    <text font-size="20" font-weight="500" fill="#FFFFFF" letter-spacing="6">RELEASE TO FIRE</text>
+  </g>
+
+  <text x="40" y="40" font-size="14" fill="rgba(255,255,255,0.45)">05 — GAME HUD · 1920×1080 (overlays on gameplay scene)</text>
+</svg>

@@ -7,6 +7,7 @@ A 2D archery combat game built with **Unity 2022 LTS** and **Photon PUN 2** for 
 ## Table of Contents
 
 - [Features](#-features)
+- [Documentation](#-documentation)
 - [Game Modes](#-game-modes)
 - [Architecture Overview](#-architecture-overview)
 - [Project Structure](#-project-structure)
@@ -18,6 +19,22 @@ A 2D archery combat game built with **Unity 2022 LTS** and **Photon PUN 2** for 
 - [Build for Android](#-build-for-android)
 - [Configuration](#-configuration)
 - [Troubleshooting](#-troubleshooting)
+- [Attributions & Sources](#-attributions--sources)
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Documentation/README.md](Documentation/README.md) | **Start here** — doc index and workflow |
+| [Documentation/ARCHITECTURE.md](Documentation/ARCHITECTURE.md) | Code structure and extension points |
+| [Documentation/GAMEPLAY_SYSTEMS.md](Documentation/GAMEPLAY_SYSTEMS.md) | How combat, physics, health, and rounds work |
+| [Documentation/PROJECT_DOCUMENTATION.md](Documentation/PROJECT_DOCUMENTATION.md) | Roadmap, status matrix, formulas |
+| [Documentation/SCREEN_FIX_GUIDE.md](Documentation/SCREEN_FIX_GUIDE.md) | Screen-by-screen visual fix briefs |
+| [Documentation/FEATURES_COINS_GEMS_LEVEL.md](Documentation/FEATURES_COINS_GEMS_LEVEL.md) | Coins, gems & level feature spec |
+| [Documentation/CRICKET_LEAGUE_REFERENCE.md](Documentation/CRICKET_LEAGUE_REFERENCE.md) | Miniclip Cricket League feature study |
+| [SETUP_README.md](SETUP_README.md) | Unity setup checklist |
 
 ---
 
@@ -25,7 +42,7 @@ A 2D archery combat game built with **Unity 2022 LTS** and **Photon PUN 2** for 
 
 | Category | Details |
 |----------|---------|
-| **Combat** | Drag-to-aim touch controls (Angry Birds style), charge-based shot power, ballistic trajectory preview |
+| **Combat** | Tap-and-hold charge with auto bow sway, ballistic trajectory preview |
 | **Hit Zones** | Head (100% instant kill), Body (30%), Limbs (15%) — auto-created at runtime via `ArcherAutoSetup` |
 | **Physics** | Full 2D ragdoll on death, arrows affected by wind & gravity, arrows stick into terrain |
 | **Arenas** | 6 procedurally generated arena layouts with building-style platforms |
@@ -95,35 +112,19 @@ A 2D archery combat game built with **Unity 2022 LTS** and **Photon PUN 2** for 
 ```
 stick-archer/
 ├── Assets/
-│   ├── Art/
-│   │   ├── Backgrounds/          # Background art assets
-│   │   ├── Sprites/              # Character & object sprites
-│   │   └── _WhiteSquare.png      # Fallback sprite for runtime rendering
-│   ├── Audio/                    # (Empty — SFX are procedurally generated)
-│   ├── Editor/                   # Unity Editor-only scripts
-│   │   ├── AutoSetupOnLoad.cs    # Automatic scene setup on editor load
-│   │   ├── BatchSetup.cs         # Batch configuration utilities
-│   │   ├── AndroidBuildHelper.cs # Android build automation
-│   │   ├── FixArenaAndRebuild.cs # Arena fix/rebuild tools
-│   │   ├── FixEventSystem.cs     # EventSystem repair utility
-│   │   ├── MainMenuSetupHelper.cs# Main menu scene setup helper
-│   │   ├── PrefabCreatorHelper.cs# Prefab creation utilities
-│   │   ├── RebuildAPK.cs         # APK build helper
-│   │   ├── SceneSetupHelper.cs   # Scene setup automation
-│   │   └── VisualOverhaul*.cs    # Visual overhaul iteration scripts (v1–v10)
+│   ├── Art/                      # Source art (Backgrounds, Platforms, Sprites, UI)
+│   ├── Editor/                   # Unity Editor tools (VisualOverhaul_v12, build helpers)
 │   ├── Photon/                   # Photon PUN 2 SDK
-│   ├── Prefabs/                  # Game prefabs (Archer, Arrow variants)
-│   ├── Resources/                # Unity Resources folder (Photon instantiation)
-│   ├── Scenes/
-│   │   ├── MainMenu.unity        # Main menu scene
-│   │   └── GameArena.unity       # Gameplay scene
-│   ├── Scripts/                  # All game scripts (detailed below)
-│   └── TextMesh Pro/             # TextMeshPro assets
-├── ProjectSettings/              # Unity project configuration
-├── SETUP.md                      # Original setup guide (online multiplayer focus)
-├── SETUP_README.md               # Streamlined setup guide (auto-setup focus)
-├── open_project.sh               # macOS script to open project in Unity Hub
-└── .gitignore                    # Unity-standard gitignore
+│   ├── Resources/                # Runtime-loaded prefabs & mirrored UI art
+│   ├── Scenes/                   # MainMenu.unity, GameArena.unity
+│   ├── Scripts/                  # Gameplay, UI, Analytics, Progression
+│   └── TextMesh Pro/
+├── Documentation/                # Architecture, gameplay, screen fixes, roadmap
+├── designs/                      # SVG mockups + specs/
+├── docs/                         # Scripts API reference, contributing
+├── SETUP_README.md               # Quick-start setup checklist
+├── open_project.sh               # macOS Unity Hub launcher
+└── README.md                     # This file
 ```
 
 ---
@@ -161,8 +162,8 @@ stick-archer/
 
 | Script | Role |
 |--------|------|
-| `ArenaGenerator.cs` | Procedurally generates 6 arena layouts: Basic, Tall, Asymmetric, Stepped, LowWall, Wide. Creates outlined building blocks with grey caps and spawn points. |
-| `ArenaBackground.cs` | Creates layered mountain silhouette backgrounds with parallax depth. |
+| `ArenaGenerator.cs` | Procedurally generates 6 arena layouts using Kenney pixel platformer tiles and grid-based logic. |
+| `ArenaBackground.cs` | Creates layered mountain silhouette backgrounds with parallax depth, using Kenney background sprites. |
 | `EnvironmentManager.cs` | Manages arena transitions between rounds with fade effects. |
 | `WindSystem.cs` | Randomizes wind force and gravity multiplier each round. Applies horizontal force to arrows via `FixedUpdate`. Updates wind direction UI text. |
 | `GameArenaBootstrap.cs` | **Scene entry point.** Destroys pre-placed objects, generates arena, spawns archers, sets up all subsystems (VFX, UI, wind, touch controls). |
@@ -189,11 +190,8 @@ All VFX are managed by `VisualEffectsManager`, which auto-creates missing subsys
 | **Arrow Trails** | `ArrowTrail.cs` | `TrailRenderer`-based golden trail on arrows |
 | **Kill Feed** | `KillFeed.cs` | Top-of-screen elimination notifications with auto-fade |
 | **Headshot Feedback** | `HeadshotFeedback.cs` | "HEADSHOT!" text + slow-motion + camera zoom sequence |
-| **Touch Ripples** | `TouchFeedback.cs` | Expanding ring ripple at touch position (object-pooled) |
-| **Character Glow** | `CharacterGlow.cs` | Pulsing glow sprite behind character |
-| **Bow Charge** | `BowChargeEffect.cs` | Color-shifting line renderer showing charge buildup |
-| **Death Effect** | `DeathEffect.cs` | Fade-out + particle burst on character death |
-| **Ragdoll** | `Ragdoll2D.cs` | Full skeletal ragdoll with 6 body parts connected via `HingeJoint2D` |
+| **Character Sprite**| `ArcherSpriteController.cs` | Drives the archer's visual sprite based on game state (idle, charge, fire, ragdoll) |
+| **Bird Obstacles** | `BirdSpawner.cs` / `BirdController.cs` | Flying bird obstacles that deflect arrows, using pixel-art sprites |
 | **Parallax** | `SimpleParallax.cs` | Camera-relative parallax scrolling for background layers |
 | **Ambient** | `AmbientEffects.cs` | Background environmental particle effects |
 
@@ -307,6 +305,17 @@ Most systems auto-create at runtime. The game is playable with placeholder stick
 | No sound | `AudioManager` auto-generates SFX — check it exists and isn't muted |
 | Online mode fails | Ensure Photon PUN 2 is imported and App ID is configured |
 | Run full diagnostics | `Tools → Check Stick Archers Setup` |
+
+---
+
+## 🎨 Attributions & Sources
+
+This project uses high-quality open-source and generated assets for its professional visual style:
+
+- **Environment & Platform Art:** [Kenney.nl](https://kenney.nl/) — *Simplified Platformer Pack*, *Pixel Platformer*, & *Background Elements* (CC0 License). Used for arena building tiles and parallax backgrounds.
+- **Character Sprites:** Sprite packs for the archers.
+- **Bird Sprite:** Custom generated 2D pixel-art bird asset using generative AI, matching the Kenney art style.
+- **Audio:** All sound effects are procedurally generated at runtime via the custom `ProceduralAudio.cs` system, requiring no external sound files.
 
 ---
 

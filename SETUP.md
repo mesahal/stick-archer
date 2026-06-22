@@ -1,5 +1,8 @@
 # Stick Archers Battle — Android (Online Multiplayer)
 
+> **Note:** This guide is legacy. For current setup, use **[SETUP_README.md](SETUP_README.md)**.
+> Architecture and gameplay docs: **[Documentation/](Documentation/)**.
+
 ## Step 1: Install Unity
 
 1. Download **Unity Hub** from https://unity.com/download

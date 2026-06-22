@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <linearGradient id="gPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#1F73D9"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5BD980"/>
+      <stop offset="100%" stop-color="#258F44"/>
+    </linearGradient>
+    <linearGradient id="gDanger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7070"/>
+      <stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <linearGradient id="goldTitle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="55%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#C9990A"/>
+    </linearGradient>
+    <linearGradient id="gPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252B45"/>
+      <stop offset="100%" stop-color="#181D30"/>
+    </linearGradient>
+    <linearGradient id="gBgVert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7BB8E8"/><stop offset="100%" stop-color="#E5C99A"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/><stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <filter id="blur" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <!-- Blurred gameplay scene underneath -->
+  <g filter="url(#blur)">
+    <rect width="1920" height="1080" fill="url(#sky)"/>
+    <path d="M0 700 L260 540 L460 620 L720 500 L960 600 L1240 520 L1520 620 L1740 540 L1920 600 L1920 1080 L0 1080 Z" fill="#7898AC" opacity="0.6"/>
+    <path d="M0 780 L200 680 L420 760 L640 660 L880 740 L1140 670 L1380 760 L1640 680 L1920 720 L1920 1080 L0 1080 Z" fill="#5A7488"/>
+    <rect y="820" width="1920" height="260" fill="#7BA850"/>
+    <rect x="180" y="700" width="320" height="40" rx="6" fill="#8B5A2B"/>
+    <rect x="1420" y="700" width="320" height="40" rx="6" fill="#8B5A2B"/>
+  </g>
+
+  <!-- Dim overlay -->
+  <rect width="1920" height="1080" fill="rgba(0,0,0,0.7)"/>
+
+  <!-- ==== PAUSE MODAL ==== -->
+  <g transform="translate(620,180)" filter="url(#shadowDeep)">
+    <rect width="680" height="720" rx="36" fill="url(#gPanel)" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+
+    <!-- Decorative top accent -->
+    <rect width="680" height="6" rx="3" fill="url(#gGold)"/>
+
+    <!-- Pause icon big -->
+    <g transform="translate(340,140)">
+      <circle r="64" fill="rgba(255,217,51,0.12)"/>
+      <rect x="-20" y="-26" width="14" height="52" rx="3" fill="#FFD933"/>
+      <rect x="6" y="-26" width="14" height="52" rx="3" fill="#FFD933"/>
+    </g>
+
+    <!-- Title -->
+    <text x="340" y="270" text-anchor="middle" font-size="56" font-weight="900" fill="#FFFFFF" letter-spacing="8">PAUSED</text>
+    <text x="340" y="310" text-anchor="middle" font-size="20" font-weight="500" fill="rgba(255,255,255,0.55)" letter-spacing="4">Take a breath, archer</text>
+
+    <!-- Buttons -->
+    <g transform="translate(60,360)" filter="url(#shadowSoft)">
+      <rect width="560" height="90" rx="45" fill="url(#gSuccess)"/>
+      <rect x="8" y="8" width="544" height="22" rx="11" fill="#FFFFFF" opacity="0.15"/>
+      <!-- play icon -->
+      <g transform="translate(66,45)" fill="#FFFFFF">
+        <path d="M-14 -17 L-14 17 L18 0 Z"/>
+      </g>
+      <text x="290" y="58" text-anchor="middle" font-size="32" font-weight="800" fill="#FFFFFF" letter-spacing="4">RESUME</text>
+    </g>
+
+    <g transform="translate(60,476)" filter="url(#shadowSoft)">
+      <rect width="560" height="90" rx="45" fill="url(#gPrimary)"/>
+      <rect x="8" y="8" width="544" height="22" rx="11" fill="#FFFFFF" opacity="0.15"/>
+      <!-- gear icon -->
+      <g transform="translate(66,45)" fill="#FFFFFF">
+        <circle r="10" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+        <g><rect x="-3.5" y="-21" width="7" height="9" rx="2"/><rect x="-3.5" y="12" width="7" height="9" rx="2"/>
+        <rect x="-21" y="-3.5" width="9" height="7" rx="2"/><rect x="12" y="-3.5" width="9" height="7" rx="2"/></g>
+        <g transform="rotate(45)"><rect x="-3.5" y="-21" width="7" height="9" rx="2"/><rect x="-3.5" y="12" width="7" height="9" rx="2"/>
+        <rect x="-21" y="-3.5" width="9" height="7" rx="2"/><rect x="12" y="-3.5" width="9" height="7" rx="2"/></g>
+      </g>
+      <text x="290" y="58" text-anchor="middle" font-size="32" font-weight="800" fill="#FFFFFF" letter-spacing="4">SETTINGS</text>
+    </g>
+
+    <g transform="translate(60,592)">
+      <rect width="560" height="90" rx="45" fill="none" stroke="#F23F3F" stroke-width="3"/>
+      <!-- exit icon -->
+      <g transform="translate(66,45)" fill="none" stroke="#F23F3F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-7 -16 L-20 -16 L-20 16 L-7 16"/>
+        <line x1="-12" y1="0" x2="15" y2="0"/>
+        <path d="M8 -7 L16 0 L8 7"/>
+      </g>
+      <text x="290" y="58" text-anchor="middle" font-size="32" font-weight="800" fill="#F23F3F" letter-spacing="4">QUIT TO MENU</text>
+    </g>
+  </g>
+
+  <!-- Mini status bottom -->
+  <g transform="translate(960,1010)" text-anchor="middle">
+    <text font-size="18" font-weight="500" fill="rgba(255,255,255,0.45)" letter-spacing="3">Round 3 / 5 · Score 3 — 2 · Tap Resume to continue</text>
+  </g>
+
+  <text x="40" y="40" font-size="14" fill="rgba(255,255,255,0.25)">06 — PAUSE MENU · 1920×1080 · Time.timeScale = 0</text>
+</svg>

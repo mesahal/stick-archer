@@ -8,15 +8,17 @@ using System.Collections;
 public class CharacterGlow : MonoBehaviour
 {
     [Header("Glow Settings")]
-    public float pulseSpeed = 2f;
-    public float minAlpha = 0.3f;
-    public float maxAlpha = 0.6f;
-    public float glowSize = 1.15f;
-    
+    public float pulseSpeed = 4.7f;      // Tuned to match BowSwayController.swayFrequency * 2π (0.75 * 2π ≈ 4.7)
+    public float minAlpha = 0.22f;
+    public float maxAlpha = 0.50f;
+    public float glowSize = 1.10f;       // Tighter than 1.15 — more subtle, more professional
+    [Tooltip("If true, the glow pulses in time with the BowSwayController on the same GameObject.")]
+    public bool  syncWithSway = true;
+
     private SpriteRenderer glowRenderer;
     private SpriteRenderer mainSprite;
     private float pulseOffset;
-    
+
     void Awake()
     {
         // Find the main sprite renderer (usually on the same object or child named "Body")
@@ -27,8 +29,16 @@ public class CharacterGlow : MonoBehaviour
             if (body != null)
                 mainSprite = body.GetComponent<SpriteRenderer>();
         }
-        
+
         if (mainSprite == null) return;
+
+        // Lock pulse speed to the sway controller's rate so the visual reads as "in sync"
+        if (syncWithSway)
+        {
+            var sway = GetComponent<BowSwayController>();
+            if (sway != null)
+                pulseSpeed = sway.swayFrequency * Mathf.PI * 2f;
+        }
         
         // Create glow child
         GameObject glowObj = new GameObject("Glow");

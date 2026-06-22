@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <g transform="translate(64,64)" fill="none" stroke="#FFFFFF" stroke-width="10">
+    <circle r="44"/>
+    <ellipse rx="20" ry="44"/>
+    <line x1="-44" y1="0" x2="44" y2="0"/>
+    <path d="M-39 -20 Q0 -7 39 -20"/>
+    <path d="M-39 20 Q0 7 39 20"/>
+  </g>
+</svg>

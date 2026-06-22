@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <linearGradient id="gPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#1F73D9"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5BD980"/>
+      <stop offset="100%" stop-color="#258F44"/>
+    </linearGradient>
+    <linearGradient id="gDanger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7070"/>
+      <stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <linearGradient id="goldTitle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="55%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#C9990A"/>
+    </linearGradient>
+    <linearGradient id="gPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252B45"/>
+      <stop offset="100%" stop-color="#181D30"/>
+    </linearGradient>
+    <linearGradient id="gBgVert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="bgSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <filter id="titleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.7"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="1920" height="1080" fill="url(#bgSky)"/>
+
+  <!-- Stars (parallax far layer) -->
+  <g fill="#FFFFFF" opacity="0.5">
+    <circle cx="160" cy="120" r="1.5"/><circle cx="280" cy="80" r="2"/><circle cx="440" cy="180" r="1"/>
+    <circle cx="640" cy="60" r="1.5"/><circle cx="820" cy="140" r="2"/><circle cx="1000" cy="90" r="1"/>
+    <circle cx="1180" cy="160" r="1.5"/><circle cx="1340" cy="70" r="2"/><circle cx="1520" cy="130" r="1"/>
+    <circle cx="1680" cy="100" r="1.5"/><circle cx="1820" cy="180" r="2"/>
+    <circle cx="220" cy="240" r="1"/><circle cx="900" cy="220" r="1"/><circle cx="1440" cy="240" r="1"/>
+  </g>
+
+  <!-- Distant mountains -->
+  <path d="M0 720 L180 580 L320 660 L520 540 L720 640 L900 560 L1100 660 L1300 580 L1520 660 L1740 580 L1920 640 L1920 1080 L0 1080 Z" fill="#1A2440" opacity="0.85"/>
+  <!-- Near mountains -->
+  <path d="M0 820 L160 720 L380 800 L580 700 L820 790 L1060 720 L1280 800 L1480 720 L1720 790 L1920 740 L1920 1080 L0 1080 Z" fill="#0F1A2E"/>
+  <!-- Ground -->
+  <rect y="900" width="1920" height="180" fill="#080C1A"/>
+  <rect y="900" width="1920" height="6" fill="#FFD933" opacity="0.15"/>
+
+  <!-- ==== PROFILE BADGE (top-left) — level, coins, gems ==== -->
+  <g transform="translate(40,40)" filter="url(#shadowSoft)">
+    <rect width="480" height="72" rx="20" fill="rgba(26,31,51,0.34)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <!-- Level -->
+    <g transform="translate(36,36)">
+      <circle r="20" fill="rgba(255,217,51,0.18)"/>
+      <polygon points="0,-12 3.5,-4 12,-4 5,1 7.5,10 0,5 -7.5,10 -5,1 -12,-4 -3.5,-4" fill="#FFD933"/>
+    </g>
+    <text x="68" y="44" font-size="28" font-weight="800" fill="#FFFFFF">12</text>
+    <line x1="128" y1="18" x2="128" y2="54" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <!-- Coins -->
+    <circle cx="168" cy="36" r="16" fill="#FFD933"/>
+    <circle cx="168" cy="36" r="10" fill="none" stroke="#1A1A1A" stroke-width="2" opacity="0.3"/>
+    <text x="196" y="44" font-size="28" font-weight="800" fill="#FFFFFF">1,240</text>
+    <line x1="308" y1="18" x2="308" y2="54" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <!-- Gems -->
+    <polygon points="348,24 364,36 356,52 340,52 332,36" fill="#6B8CFF" stroke="#FFFFFF" stroke-width="2"/>
+    <text x="384" y="44" font-size="28" font-weight="800" fill="#FFFFFF">18</text>
+  </g>
+
+  <!-- ==== TOP BAR ==== -->
+  <!-- gear icon top right — vertically centered with ProfileBadge row (y=76) -->
+  <g transform="translate(1844,76)" filter="url(#shadowSoft)">
+    <circle r="36" fill="rgba(31,36,56,0.85)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <g fill="#FFFFFF">
+      <circle r="12" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+      <g><rect x="-4" y="-28" width="8" height="12" rx="2"/><rect x="-4" y="16" width="8" height="12" rx="2"/>
+         <rect x="-28" y="-4" width="12" height="8" rx="2"/><rect x="16" y="-4" width="12" height="8" rx="2"/></g>
+      <g transform="rotate(45)"><rect x="-4" y="-28" width="8" height="12" rx="2"/><rect x="-4" y="16" width="8" height="12" rx="2"/>
+         <rect x="-28" y="-4" width="12" height="8" rx="2"/><rect x="16" y="-4" width="12" height="8" rx="2"/></g>
+    </g>
+  </g>
+
+  <!-- ==== TITLE ==== -->
+  <g transform="translate(960,260)" text-anchor="middle" filter="url(#titleShadow)">
+    <text font-size="160" font-weight="900" fill="url(#goldTitle)" stroke="#3A2200" stroke-width="4" letter-spacing="8">STICK ARCHER</text>
+  </g>
+  <text x="960" y="340" text-anchor="middle" font-size="28" font-weight="500" fill="rgba(255,255,255,0.7)" letter-spacing="12">BATTLE OF THE BOWS</text>
+
+  <!-- decorative ornaments under title -->
+  <g transform="translate(960,370)" stroke="#FFD933" stroke-width="2" fill="none" opacity="0.7">
+    <line x1="-200" y1="0" x2="-40" y2="0"/>
+    <polygon points="-30,-6 -18,0 -30,6" fill="#FFD933"/>
+    <line x1="40" y1="0" x2="200" y2="0"/>
+    <polygon points="30,-6 18,0 30,6" fill="#FFD933"/>
+    <circle cx="0" cy="0" r="6" fill="#FFD933"/>
+  </g>
+
+  <!-- ==== ACTION COLUMN ==== -->
+  <!-- Play Online primary -->
+  <g transform="translate(640,470)" filter="url(#shadowSoft)">
+    <rect width="640" height="140" rx="70" fill="url(#gPrimary)"/>
+    <!-- globe icon (online) -->
+    <g transform="translate(100,70)" fill="none" stroke="#FFFFFF" stroke-width="4">
+      <circle r="30"/>
+      <ellipse rx="14" ry="30"/>
+      <line x1="-30" y1="0" x2="30" y2="0"/>
+      <path d="M-27 -13 Q0 -4 27 -13"/>
+      <path d="M-27 13 Q0 4 27 13"/>
+    </g>
+    <text x="340" y="90" text-anchor="middle" font-size="44" font-weight="800" fill="#FFFFFF" letter-spacing="3">PLAY ONLINE</text>
+  </g>
+
+  <!-- VS Computer success -->
+  <g transform="translate(640,650)" filter="url(#shadowSoft)">
+    <rect width="640" height="140" rx="70" fill="url(#gSuccess)"/>
+    <!-- robot icon (AI) -->
+    <g transform="translate(100,70)">
+      <rect x="-28" y="-24" width="56" height="48" rx="12" fill="#FFFFFF"/>
+      <rect x="-7" y="-36" width="14" height="14" rx="3" fill="#FFFFFF"/>
+      <circle cy="-40" r="5" fill="#FFFFFF"/>
+      <circle cx="-12" cy="-4" r="6" fill="#258F44"/>
+      <circle cx="12" cy="-4" r="6" fill="#258F44"/>
+      <rect x="-12" y="10" width="24" height="5" rx="2.5" fill="#258F44"/>
+    </g>
+    <text x="340" y="90" text-anchor="middle" font-size="44" font-weight="800" fill="#FFFFFF" letter-spacing="3">VS COMPUTER</text>
+  </g>
+
+  <!-- ==== FOOTER ==== -->
+  <!-- version footer -->
+  <text x="40" y="1050" font-size="18" fill="rgba(255,255,255,0.35)">v1.0.0 · Build 142</text>
+  <text x="1880" y="1050" text-anchor="end" font-size="18" fill="rgba(255,255,255,0.35)">© Stick Archer 2026</text>
+
+  <!-- annotation -->
+  <text x="40" y="40" font-size="14" fill="rgba(255,255,255,0.25)">01 — MAIN MENU · 1920×1080 landscape</text>
+</svg>

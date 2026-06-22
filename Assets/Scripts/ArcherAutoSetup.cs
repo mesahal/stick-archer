@@ -8,11 +8,11 @@ public class ArcherAutoSetup : MonoBehaviour
 {
     [Header("Hit Zone Setup")]
     public bool autoSetupOnStart = true;
-    public float headSize = 0.3f;
-    public float bodyWidth = 0.4f;
-    public float bodyHeight = 0.6f;
-    public float limbWidth = 0.12f;
-    public float limbLength = 0.35f;
+    public float headSize = 0.34f;
+    public float bodyWidth = 0.56f;
+    public float bodyHeight = 0.9f;
+    public float limbWidth = 0.16f;
+    public float limbLength = 0.46f;
     
     [Header("Visual Colors (for debugging)")]
     public Color headColor = new Color(1f, 0.3f, 0.3f, 0.3f);
@@ -27,17 +27,14 @@ public class ArcherAutoSetup : MonoBehaviour
     
     void SetupHitZones()
     {
-        // Check if already set up
-        if (transform.Find("HitZones") != null)
-        {
-            Debug.Log("[ArcherAutoSetup] Hit zones already exist, skipping setup.");
-            return;
-        }
-        
-        // Create container
-        GameObject hitZonesContainer = new GameObject("HitZones");
+        Transform existingContainer = transform.Find("HitZones");
+        GameObject hitZonesContainer = existingContainer != null
+            ? existingContainer.gameObject
+            : new GameObject("HitZones");
         hitZonesContainer.transform.SetParent(transform, false);
         hitZonesContainer.transform.localPosition = Vector3.zero;
+        hitZonesContainer.transform.localRotation = Quaternion.identity;
+        hitZonesContainer.transform.localScale = Vector3.one;
         
         // Get archer references for player index
         int playerIndex = 1;
@@ -47,33 +44,34 @@ public class ArcherAutoSetup : MonoBehaviour
         else if (archerLocal != null) playerIndex = archerLocal.playerIndex;
         
         // Create HEAD (top)
-        GameObject head = CreateHitZoneObject(hitZonesContainer, "Head", 
-            new Vector3(0, 0.7f, 0), 
-            HitZone.ZoneType.Head, 1f, headSize);
+        GameObject head = CreateHitZoneObject(hitZonesContainer, "Head",
+            new Vector3(0, 0.82f, 0),
+            HitZone.ZoneType.Head, 0.35f, headSize);
         
         // Create BODY (torso)
         GameObject body = CreateHitZoneObject(hitZonesContainer, "Body",
-            new Vector3(0, 0.1f, 0),
-            HitZone.ZoneType.Body, 0.3f, 0f);
+            new Vector3(0, 0.28f, 0),
+            HitZone.ZoneType.Body, 0.34f, 0f);
         // Body uses box collider
-        var bodyCol = body.AddComponent<BoxCollider2D>();
+        var bodyCol = GetOrAddCollider<BoxCollider2D>(body);
         bodyCol.size = new Vector2(bodyWidth, bodyHeight);
+        bodyCol.offset = Vector2.zero;
         bodyCol.isTrigger = true;
         
         // LEFT ARM
         GameObject leftArm = CreateHitZoneObject(hitZonesContainer, "LeftArm",
-            new Vector3(-0.25f, 0.25f, 0),
+            new Vector3(-0.31f, 0.34f, 0),
             HitZone.ZoneType.LeftArm, 0.15f, 0f);
-        var leftArmCol = leftArm.AddComponent<BoxCollider2D>();
+        var leftArmCol = GetOrAddCollider<BoxCollider2D>(leftArm);
         leftArmCol.size = new Vector2(limbWidth, limbLength);
         leftArmCol.offset = new Vector2(0, -0.1f);
         leftArmCol.isTrigger = true;
         
         // RIGHT ARM (includes bow)
         GameObject rightArm = CreateHitZoneObject(hitZonesContainer, "RightArm",
-            new Vector3(0.25f, 0.25f, 0),
+            new Vector3(0.31f, 0.34f, 0),
             HitZone.ZoneType.RightArm, 0.15f, 0f);
-        var rightArmCol = rightArm.AddComponent<BoxCollider2D>();
+        var rightArmCol = GetOrAddCollider<BoxCollider2D>(rightArm);
         rightArmCol.size = new Vector2(limbWidth, limbLength * 1.5f); // Longer for bow
         rightArmCol.offset = new Vector2(0, 0.1f);
         rightArmCol.isTrigger = true;
@@ -82,53 +80,74 @@ public class ArcherAutoSetup : MonoBehaviour
         GameObject leftLeg = CreateHitZoneObject(hitZonesContainer, "LeftLeg",
             new Vector3(-0.12f, -0.35f, 0),
             HitZone.ZoneType.LeftLeg, 0.15f, 0f);
-        var leftLegCol = leftLeg.AddComponent<BoxCollider2D>();
+        var leftLegCol = GetOrAddCollider<BoxCollider2D>(leftLeg);
         leftLegCol.size = new Vector2(limbWidth, limbLength);
+        leftLegCol.offset = Vector2.zero;
         leftLegCol.isTrigger = true;
         
         // RIGHT LEG
         GameObject rightLeg = CreateHitZoneObject(hitZonesContainer, "RightLeg",
             new Vector3(0.12f, -0.35f, 0),
             HitZone.ZoneType.RightLeg, 0.15f, 0f);
-        var rightLegCol = rightLeg.AddComponent<BoxCollider2D>();
+        var rightLegCol = GetOrAddCollider<BoxCollider2D>(rightLeg);
         rightLegCol.size = new Vector2(limbWidth, limbLength);
+        rightLegCol.offset = Vector2.zero;
         rightLegCol.isTrigger = true;
+
+        // Broad fallback hurtbox matching the visible full-body sprite. This catches
+        // upper-body gaps between the segmented zones without making every hit lethal.
+        GameObject fullBody = CreateHitZoneObject(hitZonesContainer, "FullBody",
+            new Vector3(0, 0.42f, 0),
+            HitZone.ZoneType.Body, 0.34f, 0f);
+        var fullBodyCol = GetOrAddCollider<BoxCollider2D>(fullBody);
+        fullBodyCol.size = new Vector2(0.64f, 1.18f);
+        fullBodyCol.offset = Vector2.zero;
+        fullBodyCol.isTrigger = true;
         
         Debug.Log($"[ArcherAutoSetup] Hit zones created for Player {playerIndex}");
     }
     
-    GameObject CreateHitZoneObject(GameObject parent, string name, Vector3 localPos, 
+    GameObject CreateHitZoneObject(GameObject parent, string name, Vector3 localPos,
         HitZone.ZoneType zoneType, float damagePercent, float radius)
     {
-        GameObject zone = new GameObject(name);
+        Transform existing = parent.transform.Find(name);
+        GameObject zone = existing != null ? existing.gameObject : new GameObject(name);
         zone.transform.SetParent(parent.transform, false);
         zone.transform.localPosition = localPos;
+        zone.transform.localRotation = Quaternion.identity;
+        zone.transform.localScale = Vector3.one;
         
         // Add HitZone component
-        HitZone hitZone = zone.AddComponent<HitZone>();
+        HitZone hitZone = zone.GetComponent<HitZone>();
+        if (hitZone == null)
+            hitZone = zone.AddComponent<HitZone>();
         hitZone.zoneType = zoneType;
         hitZone.damagePercent = damagePercent;
-        hitZone.isInstantKill = (zoneType == HitZone.ZoneType.Head);
+        hitZone.isInstantKill = false;
         
         // Add collider (circle for head)
         if (zoneType == HitZone.ZoneType.Head)
         {
-            var circle = zone.AddComponent<CircleCollider2D>();
+            var circle = GetOrAddCollider<CircleCollider2D>(zone);
             circle.radius = radius;
+            circle.offset = Vector2.zero;
             circle.isTrigger = true;
         }
         
-        // Add debug visual
-        #if UNITY_EDITOR
-        // In editor, add a sprite for visualization
-        var sr = zone.AddComponent<SpriteRenderer>();
-        sr.sprite = CreateDebugSprite();
-        sr.color = GetZoneColor(zoneType);
-        sr.sortingOrder = -1; // Behind character
-        sr.sortingLayerName = "HitZones";
-        #endif
+        // No sprite renderers on hit zones - ArcherSpriteController hides all child renderers
+        // and debug visualization is handled by OnDrawGizmos below
         
         return zone;
+    }
+
+    T GetOrAddCollider<T>(GameObject target) where T : Collider2D
+    {
+        T collider = target.GetComponent<T>();
+        if (collider == null)
+            collider = target.AddComponent<T>();
+
+        collider.enabled = true;
+        return collider;
     }
     
     Color GetZoneColor(HitZone.ZoneType type)
@@ -141,27 +160,18 @@ public class ArcherAutoSetup : MonoBehaviour
         }
     }
     
-    Sprite CreateDebugSprite()
-    {
-        // Create a simple white 2x2 texture
-        Texture2D tex = new Texture2D(2, 2);
-        tex.SetPixel(0, 0, Color.white);
-        tex.SetPixel(1, 0, Color.white);
-        tex.SetPixel(0, 1, Color.white);
-        tex.SetPixel(1, 1, Color.white);
-        tex.Apply();
-        
-        return Sprite.Create(tex, new Rect(0, 0, 2, 2), new Vector2(0.5f, 0.5f), 2f);
-    }
-    
     void OnDrawGizmos()
     {
         // Draw wireframes in editor
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0, 0.7f, 0), headSize);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(0, 0.82f, 0), headSize);
         
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position + new Vector3(0, 0.1f, 0), 
+        Gizmos.DrawWireCube(transform.position + new Vector3(0, 0.28f, 0),
             new Vector3(bodyWidth, bodyHeight, 0));
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(transform.position + new Vector3(0, 0.42f, 0),
+            new Vector3(0.64f, 1.18f, 0));
     }
 }

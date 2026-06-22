@@ -45,15 +45,19 @@ public class HeadshotFeedback : MonoBehaviour
     public void Show(Vector3 worldPosition)
     {
         StopAllCoroutines();
+        // Always clear any lingering slow-mo before (re)starting so an interrupted
+        // sequence can never leave the game stuck at a slow timeScale (the "hang" that a
+        // pause/resume used to fix).
+        if (Time.timeScale != 0f) Time.timeScale = 1f;
         StartCoroutine(DoHeadshotSequence(worldPosition));
     }
-    
+
     IEnumerator DoHeadshotSequence(Vector3 position)
     {
-        // Slow motion
-        float originalTimeScale = Time.timeScale;
-        Time.timeScale = slowMoTimeScale;
-        
+        // Brief slow-mo for impact. We always restore to full speed (never to a captured
+        // value), so overlapping headshots can't compound into a permanent slowdown.
+        if (Time.timeScale != 0f) Time.timeScale = slowMoTimeScale;
+
         // Camera zoom
         if (zoomOnHeadshot && mainCamera != null)
         {
@@ -79,15 +83,15 @@ public class HeadshotFeedback : MonoBehaviour
         
         // Flash
         yield return new WaitForSecondsRealtime(slowMoDuration);
-        
-        // Restore time
-        Time.timeScale = originalTimeScale;
-        
-        // Fade out text
+
+        // Restore full speed (always to 1, never to a captured/slowed value).
+        if (Time.timeScale != 0f) Time.timeScale = 1f;
+
+        // Fade out text (unscaled so it's unaffected by any time changes)
         float elapsed = 0f;
         while (elapsed < 0.3f)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime;
             if (canvasGroup != null)
                 canvasGroup.alpha = 1f - (elapsed / 0.3f);
             yield return null;

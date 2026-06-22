@@ -72,55 +72,27 @@ public class HitZone : MonoBehaviour
     {
         // Check for arrow hit
         Arrow arrow = other.GetComponent<Arrow>();
-        ArrowLocal arrowLocal = other.GetComponent<ArrowLocal>();
         
         if (arrow != null)
         {
-            HandleArrowHit(arrow, other.GetComponent<Rigidbody2D>());
+            // Online arrows apply damage from Arrow.cs through Photon RPCs so all
+            // clients receive the same health, score, and respawn state.
+            return;
         }
-        else if (arrowLocal != null)
-        {
-            HandleLocalArrowHit(arrowLocal, other.GetComponent<Rigidbody2D>());
-        }
-    }
-    
-    void HandleArrowHit(Arrow arrow, Rigidbody2D arrowRb)
-    {
-        if (arrow.ownerActorNumber == playerIndex) return;
-        if (parentArcher == null || parentArcher.isDead) return;
-
-        float damage = isInstantKill ? 100f : damagePercent * 100f;
-        Vector3 force = arrowRb != null ? (Vector3)arrowRb.velocity * 0.5f : Vector3.zero;
-        parentArcher.SetLastHit(force, transform.position);
-        parentArcher.OnHitReceived(arrow.ownerActorNumber, damage);
-
-        if (zoneType == ZoneType.Head) ShowHeadshotFeedback();
+        // Local arrow damage is applied directly by ArrowLocal so trigger callback
+        // ordering cannot make hits disappear or double-apply.
     }
 
-    void HandleLocalArrowHit(ArrowLocal arrow, Rigidbody2D arrowRb)
-    {
-        if (arrow.ownerPlayerIndex == playerIndex) return;
-        if (parentArcherLocal == null || parentArcherLocal.isDead) return;
-
-        float damage = isInstantKill ? 100f : damagePercent * 100f;
-        Vector3 force = arrowRb != null ? (Vector3)arrowRb.velocity * 0.5f : Vector3.zero;
-        parentArcherLocal.SetLastHit(force, transform.position);
-        parentArcherLocal.OnHitReceived(arrow.ownerPlayerIndex, damage);
-
-        if (zoneType == ZoneType.Head) ShowHeadshotFeedback();
-    }
-    
     void ShowHeadshotFeedback()
     {
         // Trigger headshot UI effect
         var headshotUI = FindObjectOfType<HeadshotFeedback>();
         if (headshotUI != null)
-        {
             headshotUI.Show(transform.position);
-        }
-        
-        // Extra camera shake
+
+        // Extra camera shake + post-FX punch (chromatic aberration + lens distortion)
         CameraShaker.Instance?.ShakeKill();
+        PostFXTriggers.Instance?.OnHeadshot();
     }
     
     /// <summary>

@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <linearGradient id="gPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#1F73D9"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5BD980"/>
+      <stop offset="100%" stop-color="#258F44"/>
+    </linearGradient>
+    <linearGradient id="gDanger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7070"/>
+      <stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <linearGradient id="goldTitle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="55%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#C9990A"/>
+    </linearGradient>
+    <linearGradient id="gPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252B45"/>
+      <stop offset="100%" stop-color="#181D30"/>
+    </linearGradient>
+    <linearGradient id="gBgVert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="bgVictory" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#3A2A6A"/>
+      <stop offset="60%" stop-color="#1A1A4A"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </radialGradient>
+    <linearGradient id="goldHuge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="50%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#B98A0A"/>
+    </linearGradient>
+    <linearGradient id="cardWin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3258"/><stop offset="100%" stop-color="#161B30"/>
+    </linearGradient>
+    <radialGradient id="spotlight" cx="50%" cy="55%" r="40%">
+      <stop offset="0%" stop-color="#FFD933" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FFD933" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="titleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="14"/>
+      <feOffset dx="0" dy="10"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.8"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#bgVictory)"/>
+  <ellipse cx="960" cy="500" rx="900" ry="500" fill="url(#spotlight)"/>
+
+  <!-- Confetti -->
+  <g>
+    <rect x="200" y="120" width="14" height="22" rx="2" fill="#FFD933" transform="rotate(20 207 131)"/>
+    <rect x="340" y="80" width="12" height="20" rx="2" fill="#33B859" transform="rotate(-15 346 90)"/>
+    <rect x="480" y="180" width="14" height="22" rx="2" fill="#268CF2" transform="rotate(35 487 191)"/>
+    <rect x="620" y="60" width="12" height="20" rx="2" fill="#F23F3F" transform="rotate(-25 626 70)"/>
+    <rect x="780" y="140" width="14" height="22" rx="2" fill="#FFD933" transform="rotate(10 787 151)"/>
+    <rect x="940" y="80" width="12" height="20" rx="2" fill="#33B859" transform="rotate(-35 946 90)"/>
+    <rect x="1100" y="160" width="14" height="22" rx="2" fill="#268CF2" transform="rotate(25 1107 171)"/>
+    <rect x="1260" y="100" width="12" height="20" rx="2" fill="#F23F3F" transform="rotate(-20 1266 110)"/>
+    <rect x="1420" y="140" width="14" height="22" rx="2" fill="#FFD933" transform="rotate(30 1427 151)"/>
+    <rect x="1580" y="80" width="12" height="20" rx="2" fill="#33B859" transform="rotate(-10 1586 90)"/>
+    <rect x="1720" y="180" width="14" height="22" rx="2" fill="#268CF2" transform="rotate(40 1727 191)"/>
+    <!-- second band -->
+    <circle cx="180" cy="320" r="6" fill="#FFD933"/>
+    <circle cx="400" cy="280" r="5" fill="#F23F3F"/>
+    <circle cx="1480" cy="280" r="6" fill="#33B859"/>
+    <circle cx="1720" cy="320" r="5" fill="#268CF2"/>
+  </g>
+
+  <!-- ===== VICTORY TITLE ===== -->
+  <g transform="translate(960,260)" text-anchor="middle" filter="url(#titleShadow)">
+    <text font-size="220" font-weight="900" fill="url(#goldHuge)" stroke="#3A2200" stroke-width="6" letter-spacing="14">VICTORY!</text>
+  </g>
+
+  <!-- Crown / star ornaments under title -->
+  <g transform="translate(960,400)">
+    <g><polygon points="-220,0 -210,-16 -200,0 -210,16" fill="#FFD933"/></g>
+    <g><polygon points="-160,0 -150,-12 -140,0 -150,12" fill="#FFD933" opacity="0.7"/></g>
+    <g><polygon points="220,0 210,-16 200,0 210,16" fill="#FFD933"/></g>
+    <g><polygon points="160,0 150,-12 140,0 150,12" fill="#FFD933" opacity="0.7"/></g>
+  </g>
+
+  <!-- ===== FINAL SCORE CARD ===== -->
+  <g transform="translate(440,480)" filter="url(#shadowDeep)">
+    <rect width="1040" height="280" rx="32" fill="url(#cardWin)" stroke="rgba(255,217,51,0.4)" stroke-width="2"/>
+    <text x="520" y="108" text-anchor="middle" font-size="26" font-weight="700" fill="#FFD933" letter-spacing="10">FINAL SCORE</text>
+    <text x="520" y="228" text-anchor="middle" font-size="120" font-weight="900" fill="#FFFFFF">5 <tspan fill="rgba(255,255,255,0.4)">—</tspan> 2</text>
+  </g>
+
+  <!-- ===== REWARDS STRIP (below score card — no overlap) ===== -->
+  <g transform="translate(440,780)" filter="url(#shadowDeep)">
+    <rect width="1040" height="88" rx="20" fill="rgba(26,31,51,0.55)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <!-- +35 COINS -->
+    <circle cx="200" cy="44" r="16" fill="#FFD933"/>
+    <text x="230" y="40" font-size="22" font-weight="800" fill="#FFD933">+35</text>
+    <text x="230" y="62" font-size="16" font-weight="700" fill="rgba(255,255,255,0.55)" letter-spacing="3">COINS</text>
+    <!-- +70 XP -->
+    <g transform="translate(480,44)" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round">
+      <polyline points="-14,-1 0,-15 14,-1"/>
+      <polyline points="-14,15 0,1 14,15"/>
+    </g>
+    <text x="510" y="40" font-size="22" font-weight="800" fill="#FFFFFF">+70</text>
+    <text x="510" y="62" font-size="16" font-weight="700" fill="rgba(255,255,255,0.55)" letter-spacing="3">XP</text>
+    <!-- LEVEL UP badge -->
+    <rect x="760" y="20" width="240" height="48" rx="24" fill="rgba(255,217,51,0.18)" stroke="#FFD933" stroke-width="2"/>
+    <text x="880" y="52" text-anchor="middle" font-size="22" font-weight="900" fill="#FFD933" letter-spacing="4">LEVEL UP!</text>
+  </g>
+
+  <!-- ===== ACTION BUTTONS ===== -->
+  <g transform="translate(440,900)" filter="url(#shadowDeep)">
+    <rect width="500" height="120" rx="60" fill="url(#gSuccess)"/>
+    <g transform="translate(84,60)" fill="#FFFFFF">
+      <path d="M-16 -19 L-16 19 L20 0 Z"/>
+    </g>
+    <text x="280" y="78" text-anchor="middle" font-size="36" font-weight="800" fill="#FFFFFF" letter-spacing="3">REMATCH</text>
+  </g>
+
+  <g transform="translate(980,900)">
+    <rect width="500" height="120" rx="60" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+    <g transform="translate(84,60)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-17 -2 L0 -19 L17 -2"/>
+      <path d="M-13 -3 L-13 17 L13 17 L13 -3"/>
+    </g>
+    <text x="280" y="78" text-anchor="middle" font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="3">MAIN MENU</text>
+  </g>
+
+  <text x="40" y="40" font-size="14" fill="rgba(255,255,255,0.45)">08 — RESULTS · VICTORY · 1920×1080</text>
+</svg>

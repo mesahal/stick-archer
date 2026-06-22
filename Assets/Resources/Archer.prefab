@@ -697,7 +697,7 @@ Transform:
   m_GameObject: {fileID: 3781974222269247001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.05, y: 0.1, z: 0}
+  m_LocalPosition: {x: 0.05, y: 1.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1058,6 +1058,7 @@ GameObject:
   - component: {fileID: 5332444706059294217}
   - component: {fileID: 5509739081513222937}
   - component: {fileID: 8777774021610997786}
+  - component: {fileID: 7914538459646941239}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -1148,7 +1149,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.05}
+  m_Offset: {x: 0, y: 0.75}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1159,7 +1160,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.45, y: 1.2}
+  m_Size: {x: 0.4, y: 1.5}
   m_EdgeRadius: 0
 --- !u!95 &733494920535451257
 Animator:
@@ -1177,7 +1178,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -1192,8 +1193,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
@@ -1202,6 +1203,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 5509739081513222937}
+  - {fileID: 8777774021610997786}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1215,8 +1217,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 0
   m_SynchronizeScale: 0
@@ -1231,13 +1233,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa444dd75c8904939bf39a7440191cf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   arrowPrefab: {fileID: 0}
   arrowSpawnPoint: {fileID: 789032897742760481}
   maxChargeTime: 2
   minLaunchForce: 5
   maxLaunchForce: 20
-  aimSensitivity: 60
+  maxHealth: 100
+  currentHealth: 0
+  isDead: 0
   spawnPosition: {x: 0, y: 0, z: 0}
   playerIndex: 0
+  currentChargeRatio: 0
+  aimDirInput: {x: 1, y: 0}
+  arrowMass: 0.5
+  gravityScale: 1.2
+  aimLineSteps: 24
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &7914538459646941239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7780747669838412899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3021b12665f704f6bab0484568e1c06f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  swayFrequency: 0.48
+  minAngle: -30
+  maxAngle: 58

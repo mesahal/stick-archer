@@ -43,5 +43,15 @@ Thumbs.db
 *.aab
 *.keystore
 
+# Downloaded vendor assets (raw zips and extractions)
+_downloads/
+
+# JetBrains Rider
+.idea/
+*.sln.DotSettings.user
+
+# VSCode
+.vscode/
+
 # Photon App ID (keep this secret)
 Assets/Photon/PhotonUnityNetworking/Resources/PhotonServerSettings.asset

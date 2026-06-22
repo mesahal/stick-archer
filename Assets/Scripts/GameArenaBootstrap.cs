@@ -1,11 +1,13 @@
 using UnityEngine;
 using Photon.Pun;
+using StickArcher.Analytics;
 
 /// <summary>
 /// Placed once in the GameArena scene.
-/// On start, nukes ALL pre-placed scene objects except essentials,
-/// generates arena + background IMMEDIATELY (not deferred to next frame),
-/// THEN spawns archers on the generated platforms.
+/// On start, generates arena + background, then spawns archers on the platforms.
+///
+/// NOTE: No longer nukes pre-placed scene objects. UI is now built in the
+/// Unity Editor and must NOT be destroyed at runtime.
 /// </summary>
 public class GameArenaBootstrap : MonoBehaviourPunCallbacks
 {
@@ -13,17 +15,50 @@ public class GameArenaBootstrap : MonoBehaviourPunCallbacks
     public GameObject archerLocalPrefab;
     public GameObject arrowLocalPrefab;
 
+    // Deterministic camera framing for the arena (centered on the origin). The arena
+    // is built around (0,0); this guarantees the archers are always in view regardless
+    // of any stale/authored camera transform in the scene.
+    static readonly Vector3 ArenaCameraPosition = new Vector3(0f, 0f, -10f);
+    const float ArenaCameraSize = 5.5f;
+
+    /// <summary>
+    /// Keep the game simulating even when the window/editor isn't focused. Without this,
+    /// Unity pauses play mode the moment it loses OS focus — so while the player waits
+    /// idle between rounds the match appears to "hang" until they click again. Runs once
+    /// at startup, before any scene loads, so it covers every scene and builds too.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void EnableRunInBackground()
+    {
+        Application.runInBackground = true;
+    }
+
+    void Awake()
+    {
+        // Belt-and-braces: ensure it's on even if this scene is entered directly.
+        Application.runInBackground = true;
+        // Frame the camera before CameraShaker (or anything else) caches its position.
+        FrameCamera();
+    }
+
+    void FrameCamera()
+    {
+        var cam = Camera.main;
+        if (cam == null) return;
+        cam.orthographic = true;
+        cam.orthographicSize = ArenaCameraSize;
+        cam.transform.position = ArenaCameraPosition;
+    }
+
     void Start()
     {
-        // NUCLEAR CLEAN: destroy every non-essential scene object
-        NukePrePlacedObjects();
-
-        // Set camera
-        if (Camera.main != null)
-        {
-            Camera.main.backgroundColor = new Color(0.42f, 0.55f, 0.45f);
-            Camera.main.orthographicSize = 5.5f;
-        }
+#if UNITY_EDITOR
+        // When starting GameArena directly from the editor (not via menu), force Practice mode.
+        if (!Photon.Pun.PhotonNetwork.IsConnected)
+            GameMode.Current = GameMode.Mode.Practice;
+#endif
+        // Re-assert camera framing (covers cameras spawned after Awake).
+        FrameCamera();
 
         // Auto-load prefabs from Resources if not assigned in inspector
         if (archerLocalPrefab == null)
@@ -36,13 +71,19 @@ public class GameArenaBootstrap : MonoBehaviourPunCallbacks
         if (arrowLocalPrefab == null)
             Debug.LogError("[Bootstrap] ArrowLocal prefab not found in Resources!");
 
-        // Generate arena IMMEDIATELY (not deferred to Start)
-        GenerateArenaImmediate();
-
-        // Setup visual effects
+        // Setup visual effects and other systems
         SetupVisualEffects();
         SetupOtherSystems();
-        
+
+        // Build arena geometry (platforms, ground, spawn points) and background
+        GenerateArenaImmediate();
+
+        // Funnel: a match begins when the arena scene is entered for a known mode.
+        Analytics.MatchStarted(
+            GameMode.Current.ToString().ToLower(),
+            GameMode.Difficulty.ToString().ToLower(),
+            CharacterSelectUI.SelectedCharacter);
+
         if (GameMode.IsPractice)
         {
             SpawnPracticeArchers();
@@ -80,70 +121,60 @@ public class GameArenaBootstrap : MonoBehaviourPunCallbacks
         }
     }
 
-    /// <summary>
-    /// Generate arena + background RIGHT NOW (not deferred to component Start).
-    /// This ensures spawn points exist before SpawnPracticeArchers() runs.
-    /// </summary>
     void GenerateArenaImmediate()
     {
-        // Create ArenaGenerator and call GenerateArena() directly
-        var arenaGen = new GameObject("ArenaGenerator");
-        var gen = arenaGen.AddComponent<ArenaGenerator>();
-        gen.generateOnStart = false; // we call it ourselves
-        int arenaType = Random.Range(0, 6);
-        gen.GenerateArena(arenaType); // ← IMMEDIATE, not deferred
+        // Remove the old pre-placed brick buildings saved in the GameArena scene
+        // (Building_Left / Building_Right). The design uses simple wooden platforms
+        // built below, so these no longer belong.
+        foreach (string n in new[] { "Building_Left", "Building_Right" })
+        {
+            var old = GameObject.Find(n);
+            if (old != null) Destroy(old);
+        }
 
-        // Create background
+        // Build background (sky gradient, mountains, clouds, ground color)
         if (FindObjectOfType<ArenaBackground>() == null)
         {
-            var bgObj = new GameObject("ArenaBackground");
-            bgObj.AddComponent<ArenaBackground>();
+            var go = new GameObject("ArenaBackground");
+            go.AddComponent<ArenaBackground>();
         }
-    }
 
-    void NukePrePlacedObjects()
-    {
-        string[] keepNames = { "Main Camera", "Canvas", "EventSystem", "UIManager" };
-        GameObject self = this.gameObject;
-
-        foreach (GameObject root in UnityEngine.SceneManagement.SceneManager
-                     .GetActiveScene().GetRootGameObjects())
+        // Build platforms, ground tiles, and Player1Spawn/Player2Spawn points
+        var arenaGen = FindObjectOfType<ArenaGenerator>();
+        if (arenaGen == null)
         {
-            if (root == self) continue;
-
-            bool keep = false;
-            foreach (string name in keepNames)
-                if (root.name == name) { keep = true; break; }
-            if (keep) continue;
-
-            if (root.GetComponent<Camera>() != null) continue;
-            if (root.GetComponent<Canvas>() != null)
-            {
-                CleanCanvasChildren(root);
-                continue;
-            }
-            if (root.GetComponent<UnityEngine.EventSystems.EventSystem>() != null) continue;
-
-            Destroy(root);
+            var go = new GameObject("ArenaGenerator");
+            arenaGen = go.AddComponent<ArenaGenerator>();
         }
-    }
-
-    void CleanCanvasChildren(GameObject canvas)
-    {
-        for (int i = canvas.transform.childCount - 1; i >= 0; i--)
+        // generateOnStart is false by default; call directly so spawn points exist
+        // before SpawnPracticeArchers() runs
+        if (!GameMode.IsPractice && PhotonNetwork.InRoom)
         {
-            var child = canvas.transform.GetChild(i);
-            string n = child.name;
-
-            if (n == "GameHUDPanel" || n == "ResultPanel" || n == "OpponentLeftPanel")
+            int type = 0;
+            int seed = 0;
+            bool hasSeed = false;
+            var props = PhotonNetwork.CurrentRoom.CustomProperties;
+            if (props != null)
             {
-                for (int j = child.childCount - 1; j >= 0; j--)
-                    Destroy(child.GetChild(j).gameObject);
-                continue;
+                if (props.ContainsKey("_at")) type = (int)props["_at"];
+                if (props.ContainsKey("_as"))
+                {
+                    seed = (int)props["_as"];
+                    hasSeed = true;
+                }
             }
 
-            if (child.GetComponent<TouchControls>() != null) continue;
-            Destroy(child.gameObject);
+            if (!hasSeed)
+            {
+                seed = 0;
+                Debug.LogWarning("[Bootstrap] Online arena seed missing; using deterministic fallback.");
+            }
+
+            arenaGen.GenerateArena(type, seed);
+        }
+        else
+        {
+            arenaGen.GenerateArena(0);
         }
     }
 
@@ -178,10 +209,6 @@ public class GameArenaBootstrap : MonoBehaviourPunCallbacks
             wizard.AddComponent<SetupWizard>();
         }
         
-        var canvas = FindObjectOfType<Canvas>();
-        if (canvas != null && canvas.GetComponent<GameUISetup>() == null)
-            canvas.gameObject.AddComponent<GameUISetup>();
-        
         if (FindObjectOfType<WindSystem>() == null)
         {
             var windObj = new GameObject("WindSystem");
@@ -209,19 +236,25 @@ public class GameArenaBootstrap : MonoBehaviourPunCallbacks
         Vector3 p2Pos = p2GO != null ? p2GO.transform.position : new Vector3( 5f, 0f, 0);
 
         Debug.Log($"[Bootstrap] Spawning P1 at {p1Pos}, P2 at {p2Pos}");
+        int selectedCharacter = CharacterSelectUI.SelectedCharacter;
+        int opponentCharacter = selectedCharacter == 0 ? 1 : 0;
 
         // --- Player 1 (human) ---
         var p1Obj = Instantiate(archerLocalPrefab, p1Pos, Quaternion.identity);
+        p1Obj.transform.position    = SpawnAlignment.AlignFeetTo(p1Obj, p1Pos);
         var p1Archer = p1Obj.GetComponent<ArcherLocal>();
         p1Archer.playerIndex        = 1;
+        p1Archer.selectedCharacterIndex = selectedCharacter;
         p1Archer.spawnPosition      = p1Pos;
         p1Archer.isPlayerControlled = true;
         p1Archer.arrowLocalPrefab   = arrowLocalPrefab; // always assign (even if null)
 
         // --- Player 2 (AI) ---
         var p2Obj = Instantiate(archerLocalPrefab, p2Pos, Quaternion.identity);
+        p2Obj.transform.position    = SpawnAlignment.AlignFeetTo(p2Obj, p2Pos);
         var p2Archer = p2Obj.GetComponent<ArcherLocal>();
         p2Archer.playerIndex        = 2;
+        p2Archer.selectedCharacterIndex = opponentCharacter;
         p2Archer.spawnPosition      = p2Pos;
         p2Archer.isPlayerControlled = false;
         p2Archer.arrowLocalPrefab   = arrowLocalPrefab;

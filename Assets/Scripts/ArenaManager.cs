@@ -2,9 +2,8 @@ using UnityEngine;
 using Photon.Pun;
 
 /// <summary>
-/// Arena management — currently a no-op because we use a single hand-built arena.
-/// (Earlier versions spawned players from here; that's now solely done by
-/// GameArenaBootstrap so we don't double-spawn.)
+/// Legacy arena prefab loader — currently a no-op. Player spawn and arena generation
+/// are handled by GameArenaBootstrap + ArenaGenerator. Kept for GameArena scene compatibility.
 /// </summary>
 public class ArenaManager : MonoBehaviourPunCallbacks
 {

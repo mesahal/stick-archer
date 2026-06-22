@@ -1,0 +1,374 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 2500" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <!-- Button gradients -->
+    <linearGradient id="gPrimary" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4DA3FF"/>
+      <stop offset="100%" stop-color="#1F73D9"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5BD980"/>
+      <stop offset="100%" stop-color="#258F44"/>
+    </linearGradient>
+    <linearGradient id="gDanger" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7070"/>
+      <stop offset="100%" stop-color="#D63232"/>
+    </linearGradient>
+    <linearGradient id="gWarning" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFB04D"/>
+      <stop offset="100%" stop-color="#D67410"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <linearGradient id="gPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#252B45"/>
+      <stop offset="100%" stop-color="#181D30"/>
+    </linearGradient>
+    <linearGradient id="gBgVert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2552"/>
+      <stop offset="55%" stop-color="#0F1A38"/>
+      <stop offset="100%" stop-color="#0A0E1C"/>
+    </linearGradient>
+    <linearGradient id="goldTitle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF3A0"/>
+      <stop offset="55%" stop-color="#FFD933"/>
+      <stop offset="100%" stop-color="#C9990A"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="4"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowDeep" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="8"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1800" fill="url(#gBgVert)"/>
+
+  <!-- Header -->
+  <g transform="translate(0,0)">
+    <rect width="1920" height="140" fill="#0F1421"/>
+    <text x="80" y="92" font-size="56" font-weight="800" fill="#FFFFFF" letter-spacing="2">STICK ARCHER</text>
+    <text x="500" y="92" font-size="40" font-weight="500" fill="#FFD933" letter-spacing="6">DESIGN SYSTEM</text>
+    <text x="1840" y="92" font-size="28" font-weight="400" fill="rgba(255,255,255,0.5)" text-anchor="end">v1.0 — Reference Resolution 1920×1080</text>
+    <rect y="138" width="1920" height="2" fill="#FFD933" opacity="0.4"/>
+  </g>
+
+  <!-- ===== SECTION: PALETTE ===== -->
+  <g transform="translate(80,200)">
+    <text font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="3">01 — PALETTE</text>
+    <text y="40" font-size="22" fill="rgba(255,255,255,0.6)">Brand colors inherited from VisualOverhaul_v10. Hex values are the source of truth for Unity tokens.</text>
+
+    <!-- Row 1: backgrounds -->
+    <g transform="translate(0,80)">
+      <g><rect width="220" height="160" rx="16" fill="#141A29"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">BgDark</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#141A29</text></g>
+      <g transform="translate(250,0)"><rect width="220" height="160" rx="16" fill="#1F2438"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">BgPanel</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#1F2438 · 96%</text></g>
+      <g transform="translate(500,0)"><rect width="220" height="160" rx="16" fill="#0F1421"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">BgPanelDeep</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#0F1421 · 98%</text></g>
+    </g>
+
+    <!-- Row 2: actions -->
+    <g transform="translate(0,340)">
+      <g><rect width="220" height="160" rx="16" fill="url(#gPrimary)"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">Primary</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#268CF2</text></g>
+      <g transform="translate(250,0)"><rect width="220" height="160" rx="16" fill="url(#gSuccess)"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">Success</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#33B859</text></g>
+      <g transform="translate(500,0)"><rect width="220" height="160" rx="16" fill="url(#gWarning)"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">Warning</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#F28C1A</text></g>
+      <g transform="translate(750,0)"><rect width="220" height="160" rx="16" fill="url(#gDanger)"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">Danger</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#F23F3F</text></g>
+      <g transform="translate(1000,0)"><rect width="220" height="160" rx="16" fill="#737380"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">Neutral</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#737380</text></g>
+      <g transform="translate(1250,0)"><rect width="220" height="160" rx="16" fill="url(#gGold)"/><text y="190" x="110" text-anchor="middle" fill="#1A1A1A" font-size="22" font-weight="600">Gold</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#FFD933</text></g>
+      <g transform="translate(1500,0)"><rect width="220" height="160" rx="16" fill="#6B8CFF"/><text y="190" x="110" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="600">Gem</text><text y="220" x="110" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="18">#6B8CFF</text></g>
+    </g>
+  </g>
+
+  <!-- ===== SECTION: TYPOGRAPHY ===== -->
+  <g transform="translate(80,800)">
+    <text font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="3">02 — TYPOGRAPHY</text>
+    <text y="40" font-size="22" fill="rgba(255,255,255,0.6)">Inter / Helvetica Neue at runtime. Sizes are reference-resolution pixels (1920×1080 design space).</text>
+
+    <g transform="translate(0,90)">
+      <text font-size="120" font-weight="900" fill="#FFFFFF">Display</text>
+      <text x="1100" y="50" font-size="20" fill="rgba(255,255,255,0.55)">120 / 900 — game title, VICTORY/DEFEAT</text>
+    </g>
+    <g transform="translate(0,250)">
+      <text font-size="72" font-weight="800" fill="#FFFFFF">Heading 1</text>
+      <text x="1100" y="30" font-size="20" fill="rgba(255,255,255,0.55)">72 / 800 — screen titles</text>
+    </g>
+    <g transform="translate(0,360)">
+      <text font-size="52" font-weight="700" fill="#FFFFFF">Heading 2</text>
+      <text x="1100" y="20" font-size="20" fill="rgba(255,255,255,0.55)">52 / 700 — section headings</text>
+    </g>
+    <g transform="translate(0,440)">
+      <text font-size="36" font-weight="600" fill="#FFFFFF">Body — button labels, primary content</text>
+      <text x="1100" y="0" font-size="20" fill="rgba(255,255,255,0.55)">36 / 600</text>
+    </g>
+    <g transform="translate(0,500)">
+      <text font-size="28" font-weight="500" fill="rgba(255,255,255,0.85)">Small — sublabels, secondary text</text>
+      <text x="1100" y="0" font-size="20" fill="rgba(255,255,255,0.55)">28 / 500</text>
+    </g>
+    <g transform="translate(0,550)">
+      <text font-size="22" font-weight="400" fill="rgba(255,255,255,0.6)">Caption — hints, status, version</text>
+      <text x="1100" y="0" font-size="20" fill="rgba(255,255,255,0.55)">22 / 400</text>
+    </g>
+  </g>
+
+  <!-- Divider -->
+  <line x1="1100" y1="800" x2="1100" y2="1400" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+
+  <!-- ===== SECTION: BUTTON STATES ===== -->
+  <g transform="translate(1180,800)">
+    <text font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="3">03 — BUTTONS</text>
+    <text y="40" font-size="22" fill="rgba(255,255,255,0.6)">560×130 primary · 440×100 secondary · 96×96 icon</text>
+
+    <!-- Primary states -->
+    <g transform="translate(0,90)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">PRIMARY — Idle</text>
+      <g transform="translate(0,16)" filter="url(#shadowSoft)">
+        <rect width="500" height="120" rx="60" fill="url(#gPrimary)"/>
+        <rect x="2" y="2" width="496" height="40" rx="58" fill="rgba(255,255,255,0.15)"/>
+        <text x="250" y="78" text-anchor="middle" font-size="36" font-weight="700" fill="#FFFFFF" letter-spacing="2">PLAY ONLINE</text>
+      </g>
+    </g>
+    <g transform="translate(0,250)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">PRIMARY — Pressed (scale 0.92)</text>
+      <g transform="translate(20,16) scale(0.92)">
+        <rect width="500" height="120" rx="60" fill="#1F73D9"/>
+        <text x="250" y="78" text-anchor="middle" font-size="36" font-weight="700" fill="#FFFFFF" letter-spacing="2">PLAY ONLINE</text>
+      </g>
+    </g>
+    <g transform="translate(0,400)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">PRIMARY — Disabled</text>
+      <g transform="translate(0,16)" opacity="0.4">
+        <rect width="500" height="120" rx="60" fill="#737380"/>
+        <text x="250" y="78" text-anchor="middle" font-size="36" font-weight="700" fill="#FFFFFF" letter-spacing="2">PLAY ONLINE</text>
+      </g>
+    </g>
+
+    <!-- Secondary (hollow) -->
+    <g transform="translate(0,550)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">SECONDARY — Hollow</text>
+      <g transform="translate(0,16)">
+        <rect width="400" height="100" rx="50" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+        <text x="200" y="65" text-anchor="middle" font-size="32" font-weight="600" fill="#FFFFFF">BACK TO MENU</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ===== SECTION: COMPONENTS ===== -->
+  <g transform="translate(80,1450)">
+    <text font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="3">04 — COMPONENTS</text>
+
+    <!-- Card -->
+    <g transform="translate(0,60)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Card / Panel</text>
+      <g transform="translate(0,16)" filter="url(#shadowSoft)">
+        <rect width="320" height="220" rx="24" fill="url(#gPanel)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <text x="24" y="44" font-size="22" font-weight="700" fill="#FFD933">CARD HEADER</text>
+        <text x="24" y="84" font-size="20" fill="rgba(255,255,255,0.7)">Card body text fills</text>
+        <text x="24" y="112" font-size="20" fill="rgba(255,255,255,0.7)">multiple lines with</text>
+        <text x="24" y="140" font-size="20" fill="rgba(255,255,255,0.7)">comfortable spacing.</text>
+        <rect x="24" y="170" width="120" height="36" rx="18" fill="url(#gPrimary)"/>
+        <text x="84" y="194" text-anchor="middle" font-size="18" font-weight="600" fill="#FFFFFF">ACTION</text>
+      </g>
+    </g>
+
+    <!-- Slider -->
+    <g transform="translate(360,60)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Slider</text>
+      <g transform="translate(0,40)">
+        <text font-size="20" fill="#FFFFFF">SFX</text>
+        <rect x="60" y="-12" width="360" height="20" rx="10" fill="#0F1421"/>
+        <rect x="60" y="-12" width="240" height="20" rx="10" fill="url(#gPrimary)"/>
+        <circle cx="300" cy="-2" r="18" fill="#FFFFFF" filter="url(#shadowSoft)"/>
+      </g>
+      <g transform="translate(0,90)">
+        <text font-size="20" fill="#FFFFFF">MUS</text>
+        <rect x="60" y="-12" width="360" height="20" rx="10" fill="#0F1421"/>
+        <rect x="60" y="-12" width="180" height="20" rx="10" fill="url(#gPrimary)"/>
+        <circle cx="240" cy="-2" r="18" fill="#FFFFFF" filter="url(#shadowSoft)"/>
+      </g>
+      <!-- Toggle -->
+      <g transform="translate(0,140)">
+        <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Toggle</text>
+        <g transform="translate(0,28)">
+          <rect width="72" height="36" rx="18" fill="url(#gSuccess)"/>
+          <circle cx="54" cy="18" r="14" fill="#FFFFFF"/>
+          <text x="90" y="26" font-size="22" fill="#FFFFFF">Vibration · ON</text>
+        </g>
+        <g transform="translate(0,80)">
+          <rect width="72" height="36" rx="18" fill="#3A3F55"/>
+          <circle cx="18" cy="18" r="14" fill="#FFFFFF"/>
+          <text x="90" y="26" font-size="22" fill="rgba(255,255,255,0.55)">Mute · OFF</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Segmented Control -->
+    <g transform="translate(800,60)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Segmented Control</text>
+      <g transform="translate(0,28)">
+        <rect width="420" height="64" rx="32" fill="#0F1421"/>
+        <rect x="4" y="4" width="136" height="56" rx="28" fill="url(#gPrimary)"/>
+        <text x="72" y="42" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF">EASY</text>
+        <text x="210" y="42" text-anchor="middle" font-size="22" font-weight="500" fill="rgba(255,255,255,0.55)">NORMAL</text>
+        <text x="348" y="42" text-anchor="middle" font-size="22" font-weight="500" fill="rgba(255,255,255,0.55)">HARD</text>
+      </g>
+
+      <!-- Progress bar -->
+      <g transform="translate(0,140)">
+        <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Progress Bar (charge meter)</text>
+        <g transform="translate(0,28)">
+          <rect width="420" height="24" rx="12" fill="#0F1421"/>
+          <rect width="294" height="24" rx="12" fill="url(#gWarning)"/>
+        </g>
+      </g>
+
+      <!-- Badge -->
+      <g transform="translate(0,220)">
+        <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Badge</text>
+        <g transform="translate(0,28)">
+          <rect width="72" height="36" rx="18" fill="url(#gGold)"/>
+          <text x="36" y="26" text-anchor="middle" font-size="22" font-weight="700" fill="#1A1A1A">3</text>
+          <rect x="92" y="0" width="72" height="36" rx="18" fill="url(#gDanger)"/>
+          <text x="128" y="26" text-anchor="middle" font-size="22" font-weight="700" fill="#FFFFFF">×5</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Icon library -->
+    <g transform="translate(1280,60)">
+      <text font-size="22" font-weight="600" fill="rgba(255,255,255,0.55)">Icons (procedural)</text>
+      <g transform="translate(0,28)" fill="#FFFFFF">
+        <g><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- gear -->
+          <g transform="translate(36,36)"><circle r="10" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+            <g><rect x="-3" y="-22" width="6" height="10" rx="1.5"/><rect x="-3" y="12" width="6" height="10" rx="1.5"/>
+            <rect x="-22" y="-3" width="10" height="6" rx="1.5"/><rect x="12" y="-3" width="10" height="6" rx="1.5"/></g>
+            <g transform="rotate(45)"><rect x="-3" y="-22" width="6" height="10" rx="1.5"/><rect x="-3" y="12" width="6" height="10" rx="1.5"/>
+            <rect x="-22" y="-3" width="10" height="6" rx="1.5"/><rect x="12" y="-3" width="10" height="6" rx="1.5"/></g>
+          </g>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">gear</text>
+        </g>
+        <g transform="translate(96,0)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- pause -->
+          <rect x="22" y="18" width="10" height="36" rx="2"/><rect x="40" y="18" width="10" height="36" rx="2"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">pause</text>
+        </g>
+        <g transform="translate(192,0)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- play -->
+          <path d="M26 18 L26 54 L54 36 Z"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">play</text>
+        </g>
+        <g transform="translate(288,0)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- close -->
+          <path d="M22 22 L50 50 M50 22 L22 50" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">close</text>
+        </g>
+        <g transform="translate(0,140)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- back chevron -->
+          <path d="M44 22 L28 36 L44 50" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">back</text>
+        </g>
+        <g transform="translate(96,140)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- speaker -->
+          <path d="M22 30 L30 30 L40 22 L40 50 L30 42 L22 42 Z"/>
+          <path d="M46 26 Q54 36 46 46" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">sound</text>
+        </g>
+        <g transform="translate(192,140)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- warning -->
+          <path d="M36 18 L56 52 L16 52 Z" fill="#F23F3F"/>
+          <rect x="34" y="28" width="4" height="14" fill="#FFFFFF"/>
+          <rect x="34" y="44" width="4" height="4" fill="#FFFFFF"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">warning</text>
+        </g>
+        <g transform="translate(288,140)"><circle cx="36" cy="36" r="36" fill="rgba(255,255,255,0.08)"/>
+          <!-- spinner arc -->
+          <path d="M36 14 A22 22 0 0 1 58 36" fill="none" stroke="#FFD933" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="36" cy="36" r="22" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="5"/>
+          <text y="100" x="36" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">spinner</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- Footer note -->
+  <g transform="translate(80,1740)">
+    <text font-size="20" fill="rgba(255,255,255,0.45)">Spacing: 4-8-16-24-32-48-64    |    Radii: 16-24-32-pill60    |    Min touch: 96x96    |    See DESIGN_CONSISTENCY.md</text>
+  </g>
+
+  <!-- ===== SECTION 05: PREMIUM + META COMPONENTS (below fold - scroll canvas) ===== -->
+  <g transform="translate(80,1820)">
+    <text font-size="32" font-weight="700" fill="#FFFFFF" letter-spacing="3">05 — PREMIUM CHECKLIST</text>
+    <text y="36" font-size="20" fill="rgba(255,255,255,0.55)">Every screen must pass: gradient buttons + shadowSoft | card stroke 8-12% | icon+label on primary actions</text>
+  </g>
+
+  <g transform="translate(80,1920)">
+    <text font-size="28" font-weight="700" fill="#FFD933" letter-spacing="2">ProfileBadge 480x72</text>
+    <g transform="translate(0,40)" filter="url(#shadowSoft)">
+      <rect width="480" height="72" rx="20" fill="rgba(26,31,51,0.34)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <g transform="translate(36,36)">
+        <circle r="20" fill="rgba(255,217,51,0.18)"/>
+        <polygon points="0,-12 3.5,-4 12,-4 5,1 7.5,10 0,5 -7.5,10 -5,1 -12,-4 -3.5,-4" fill="#FFD933"/>
+      </g>
+      <text x="68" y="44" font-size="28" font-weight="800" fill="#FFFFFF">12</text>
+      <line x1="128" y1="18" x2="128" y2="54" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <circle cx="168" cy="36" r="16" fill="#FFD933"/>
+      <text x="196" y="44" font-size="28" font-weight="800" fill="#FFFFFF">1,240</text>
+      <line x1="308" y1="18" x2="308" y2="54" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <polygon points="348,24 364,36 356,52 340,52 332,36" fill="#6B8CFF"/>
+      <text x="384" y="44" font-size="28" font-weight="800" fill="#FFFFFF">18</text>
+    </g>
+  </g>
+
+  <g transform="translate(680,1920)">
+    <text font-size="28" font-weight="700" fill="#FFD933" letter-spacing="2">RewardsStrip 1040x88</text>
+    <g transform="translate(0,40)" filter="url(#shadowSoft)">
+      <rect width="520" height="88" rx="20" fill="rgba(26,31,51,0.55)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <circle cx="80" cy="44" r="16" fill="#FFD933"/>
+      <text x="110" y="40" font-size="22" font-weight="800" fill="#FFD933">+35 COINS</text>
+      <text x="280" y="40" font-size="22" font-weight="800" fill="#FFFFFF">+70 XP</text>
+      <rect x="380" y="20" width="120" height="48" rx="24" fill="rgba(255,217,51,0.18)" stroke="#FFD933" stroke-width="2"/>
+      <text x="440" y="52" text-anchor="middle" font-size="18" font-weight="900" fill="#FFD933">LEVEL UP</text>
+    </g>
+  </g>
+
+  <g transform="translate(80,2100)">
+    <text font-size="28" font-weight="700" fill="#FFD933" letter-spacing="2">Modal shell 800x600</text>
+    <g transform="translate(0,40)">
+      <rect width="400" height="300" rx="8" fill="rgba(0,0,0,0.65)"/>
+      <g transform="translate(40,30)" filter="url(#shadowDeep)">
+        <rect width="320" height="240" rx="24" fill="url(#gPanel)" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+        <rect x="2" y="2" width="316" height="6" rx="3" fill="#FFD933"/>
+        <text x="160" y="80" text-anchor="middle" font-size="28" font-weight="900" fill="url(#goldTitle)">MODAL</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(520,2100)">
+    <text font-size="28" font-weight="700" fill="#FFD933" letter-spacing="2">Character card selected</text>
+    <g transform="translate(0,40)" filter="url(#shadowSoft)">
+      <rect width="200" height="240" rx="20" fill="url(#gPanel)" stroke="url(#gGold)" stroke-width="3"/>
+      <text x="100" y="200" text-anchor="middle" font-size="18" font-weight="800" fill="#FFD933">SELECTED</text>
+    </g>
+    <text x="240" y="140" font-size="18" fill="rgba(255,255,255,0.5)">Gold stroke = selected/you</text>
+  </g>
+
+  <g transform="translate(80,2280)">
+    <text font-size="28" font-weight="700" fill="#FFD933" letter-spacing="2">Currency icons</text>
+    <g transform="translate(0,40)">
+      <circle cx="40" cy="40" r="32" fill="rgba(255,217,51,0.15)"/>
+      <circle cx="40" cy="40" r="16" fill="#FFD933"/>
+      <text x="40" y="100" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.55)">coin.svg</text>
+      <polygon points="160,24 180,40 170,64 150,64 140,40" fill="#6B8CFF" transform="translate(0,0)"/>
+      <text x="160" y="100" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.55)">gem.svg</text>
+      <circle cx="280" cy="40" r="20" fill="none" stroke="#FFD933" stroke-width="4"/>
+      <text x="280" y="48" text-anchor="middle" font-size="14" font-weight="900" fill="#FFD933">XP</text>
+      <text x="280" y="100" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.55)">xp.svg</text>
+    </g>
+  </g>
+</svg>

@@ -1,6 +1,11 @@
 # Scripts API Reference
 
-Complete reference for all 48 C# scripts in `Assets/Scripts/`. Each entry documents the script's purpose, public API, Inspector fields, and dependencies.
+> **Note:** This reference covers core scripts from an earlier snapshot (~48 files).
+> The project now has 70+ scripts including `Analytics/`, `Progression/`, and `UI/` subfolders.
+> For current architecture and file roles, see **[Documentation/ARCHITECTURE.md](../Documentation/ARCHITECTURE.md)**.
+> For gameplay behavior, see **[Documentation/GAMEPLAY_SYSTEMS.md](../Documentation/GAMEPLAY_SYSTEMS.md)**.
+
+Complete reference for C# scripts in `Assets/Scripts/`. Each entry documents the script's purpose, public API, Inspector fields, and dependencies.
 
 ---
 
@@ -220,7 +225,7 @@ public static class GameMode
 | 4 | LowWall | Equal buildings + center barrier |
 | 5 | Wide | Equal buildings, wider platforms |
 
-**Block Rendering:** Each block has a near-black outline (`SpriteDrawMode.Sliced`) behind a colored fill. Ground is dark brown, platforms are warm tan, caps are grey.
+**Block Rendering:** Uses Kenney pixel platformer tiles. Walls use `building_wall` or `building_wall_alt`, ground uses `grass_top` and `dirt_fill`. Fallbacks to procedural white blocks if sprites are missing.
 
 **Spawn Point Positioning:** `capTopSurface + 0.70f` (accounts for character leg offset).
 
@@ -228,7 +233,7 @@ public static class GameMode
 
 ### `ArenaBackground.cs`
 
-**Purpose:** Generates mountain silhouette layers behind the arena. Two layers (far=dark, near=lighter) of triangular peak sprites.
+**Purpose:** Generates mountain silhouette layers behind the arena. Uses Kenney background elements (hills, mountains, clouds, castles) mapped to multiple parallax depth layers with runtime color tinting.
 
 ---
 
@@ -262,6 +267,12 @@ public static class GameMode
 ### `MovingPlatform` (in ArenaGenerator.cs)
 
 **Purpose:** Simple sinusoidal platform movement. Not currently used by any arena type.
+
+---
+
+### `BirdSpawner.cs` / `BirdController.cs`
+
+**Purpose:** Dynamic environmental obstacles. `BirdSpawner` periodically spawns birds that fly horizontally across the arena. `BirdController` manages their sinusoidal flight path and wing flapping animation. Arrows deflect off birds and destroy them. Uses generated pixel-art bird sprites.
 
 ---
 
@@ -473,6 +484,12 @@ ConnectAndPlay() → OnConnectedToMaster() → JoinRandomRoom()
 
 ---
 
+### `ArcherSpriteController.cs`
+
+**Purpose:** Drives the archer's visual sprite based on game state (idle, charge, fire, ragdoll) without using procedural primitives. Auto-loads Kenney character sprites and applies team tint.
+
+---
+
 ### `SimpleParallax.cs`
 
 **Purpose:** Camera-relative parallax for background layers. Each layer has a `parallaxFactor` (0=moves with camera, 1=stationary).
@@ -518,11 +535,21 @@ ConnectAndPlay() → OnConnectedToMaster() → JoinRandomRoom()
 
 ---
 
+---
+
 ### `PrefabValidator.cs`
 
 **Menu:** `Tools → Validate Prefabs`, `Tools → Assign Prefabs to Bootstrap`, `Tools → Setup Android Build`
 
 **Creates:** Placeholder `ArcherLocal.prefab` and `ArrowLocal.prefab` with required components.
+
+---
+
+### `SpriteImportSetup.cs`
+
+**Menu:** Runs automatically on editor load
+
+**Purpose:** Configures imported sprites with correct settings (PPU, Filter Mode, Compression) to ensure pixel art remains crisp and scales correctly. Crucial for Kenney pixel art assets.
 
 ---
 

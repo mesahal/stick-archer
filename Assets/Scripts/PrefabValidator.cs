@@ -140,15 +140,10 @@ public class PrefabValidator : MonoBehaviour
     {
         // Set orientation
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
-        
-        // Set Android as active build target
-        EditorUserBuildSettings.activeBuildTargetChanged += () => {
-            Debug.Log("[PrefabValidator] Build target changed");
-        };
-        
+
         Debug.Log("[PrefabValidator] Android build settings applied:");
         Debug.Log("  - Orientation: Landscape Left");
-        Debug.Log("  - To build: File → Build Settings → Build");
+        Debug.Log("  - To build: File \u2192 Build Settings \u2192 Build");
         Debug.LogWarning("[PrefabValidator] Note: You must still add scenes to Build Settings manually!");
     }
 }

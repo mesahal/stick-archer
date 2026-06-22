@@ -12,9 +12,14 @@ public class ArcherLocal : MonoBehaviour
     [Header("Shooting")]
     public GameObject arrowLocalPrefab;
     public Transform  arrowSpawnPoint;
-    public float maxChargeTime  = 1.5f;
+    public float maxChargeTime  = 1.0f;
     public float minLaunchForce = 3f;
     public float maxLaunchForce = 9f;
+    [Tooltip("Reference-style: power is FIXED (no charge). Every shot fires at this force; the only skill is the release angle.")]
+    public float launchForce = 7f;
+
+    /// <summary>True while the player is holding to aim (used by BowSwayController to sweep only while aiming).</summary>
+    public bool IsAiming => isCharging || touchHoldInput;
 
     [Header("Health")]
     public float maxHealth = 100f;
@@ -29,6 +34,7 @@ public class ArcherLocal : MonoBehaviour
 
     [HideInInspector] public int  playerIndex;  // 1 = human, 2 = AI
     [HideInInspector] public bool isPlayerControlled = true;
+    [HideInInspector] public int selectedCharacterIndex = -1; // 0 = adventurer, 1 = soldier
 
     private float chargeTimer    = 0f;
     private bool  isCharging     = false;
@@ -37,10 +43,21 @@ public class ArcherLocal : MonoBehaviour
     private Rigidbody2D rb;
     private Animator    animator;
     private LineRenderer aimLine;
+    private ArcherSpriteController spriteController;
+    private FloatingHealthBar healthBar;
 
     // Manual aim state
     [HideInInspector] public float currentChargeRatio = 0f;
     [HideInInspector] public Vector2 aimDirInput = Vector2.right;
+
+    [Header("Arm Bobbing")]
+    [Tooltip("Maximum angular offset in degrees for the continuous arm bob (set to 0 to disable)")]
+    public float bobAmplitude = 0f;
+    [Tooltip("Bob oscillation speed (cycles per second)")]
+    public float bobFrequency = 0.75f;
+    private float bobPhase = 0f;
+    /// <summary>Current bob angle offset in degrees (kept for compatibility but not used for aim).</summary>
+    [HideInInspector] public float currentBobAngle = 0f;
 
     // Physics for ballistic preview (must match ArrowLocal prefab Rigidbody2D)
     [Header("Ballistic Preview")]
@@ -49,13 +66,24 @@ public class ArcherLocal : MonoBehaviour
     public int   aimLineSteps = 24;
     public LayerMask groundLayer;
 
-    // Child body-part names whose SpriteRenderers should be hidden on ragdoll
-    static readonly string[] BodyPartNames = { "Body", "Pants", "Head", "Hair", "ArmBack", "ArmFront", "Legs", "BowShaft", "BowTip_Top", "BowTip_Bot" };
+    // Original rigidbody tuning, cached so the heavy death-tumble overrides can be
+    // restored cleanly on respawn.
+    private float _rbMass = 1f, _rbGravity = 1f, _rbDrag = 0f, _rbAngularDrag = 0.05f;
 
     void Awake()
     {
         rb        = GetComponent<Rigidbody2D>();
-        animator  = GetComponent<Animator>();
+        if (rb != null)
+        {
+            _rbMass        = rb.mass;
+            _rbGravity     = rb.gravityScale;
+            _rbDrag        = rb.drag;
+            _rbAngularDrag = rb.angularDrag;
+        }
+        // Animator is optional - no Animator component means no animation clips.
+        // Must use explicit Unity null check (not ?.) because GetComponent returns fake-null.
+        var foundAnimator = GetComponent<Animator>();
+        animator = (foundAnimator != null) ? foundAnimator : null;
         currentHealth = maxHealth;
 
         // Auto-set ground layer mask if not assigned in inspector
@@ -72,72 +100,20 @@ public class ArcherLocal : MonoBehaviour
 
     void Start()
     {
-        Color teamColor = playerIndex == 2
-            ? new Color(0.85f, 0.20f, 0.18f)
-            : new Color(0.20f, 0.40f, 0.85f);
-
-        Color skinColor  = new Color(0.92f, 0.76f, 0.60f);
-        Color darkTeam   = teamColor * 0.65f;
-        Color outlineCol = new Color(0.10f, 0.12f, 0.18f);
-
-        // Color every body part for visibility
-        ColorChild("Body",  teamColor);
-        ColorChild("Pants", darkTeam);
-        ColorChild("Head",  skinColor);
-        ColorChild("Hair",  teamColor * 0.8f);
-        ColorChild("Legs",  darkTeam);
-
-        // Create arm children if missing (prefab may not have them)
-        EnsureChild("ArmBack",  new Vector3(-0.15f, 0.22f, 0), new Vector3(0.10f, 0.40f, 1), darkTeam);
-        EnsureChild("ArmFront", new Vector3( 0.15f, 0.22f, 0), new Vector3(0.10f, 0.40f, 1), teamColor);
-
-        // Create dark outline shadows behind each visible body part for contrast
-        AddOutlineShadows(outlineCol);
-
-        if (playerIndex == 2)
-            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x),
-                                               transform.localScale.y, 1);
+        // Hand off all visual setup to the sprite controller (real character art,
+        // team tint, mirror for P2). Falls back to creating one if not present.
+        spriteController = GetComponent<ArcherSpriteController>();
+        if (spriteController == null)
+            spriteController = gameObject.AddComponent<ArcherSpriteController>();
+        spriteController.Setup(playerIndex, EffectiveCharacterIndex());
 
         BuildAimLine();
 
-        // Force all child SpriteRenderers onto Default sorting layer with known order
-        NormalizeSortingLayers();
+        // Floating health bar above the archer's head (reference-game style).
+        healthBar = gameObject.AddComponent<FloatingHealthBar>();
+        healthBar.Init(transform);
 
         UIManager.Instance?.SetPlayerHealth(playerIndex, currentHealth, maxHealth);
-    }
-
-    void EnsureChild(string name, Vector3 localPos, Vector3 localScale, Color color)
-    {
-        if (transform.Find(name) != null) { ColorChild(name, color); return; }
-        var go = new GameObject(name);
-        go.transform.SetParent(transform, false);
-        go.transform.localPosition = localPos;
-        go.transform.localScale = localScale;
-        var sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = WhiteSquareSpriteCache.Get();
-        sr.color = color;
-    }
-
-    void AddOutlineShadows(Color outlineCol)
-    {
-        foreach (var sr in GetComponentsInChildren<SpriteRenderer>(true))
-        {
-            if (sr.gameObject == this.gameObject) continue;
-            if (sr.gameObject.name.Contains("Outline")) continue;
-            if (sr.gameObject.name == "AimLine") continue;
-
-            var shadow = new GameObject(sr.gameObject.name + "_Outline");
-            shadow.transform.SetParent(sr.transform.parent, false);
-            shadow.transform.localPosition = sr.transform.localPosition;
-            shadow.transform.localScale = sr.transform.localScale * 1.2f;
-            shadow.transform.localRotation = sr.transform.localRotation;
-
-            var ssr = shadow.AddComponent<SpriteRenderer>();
-            ssr.sprite = sr.sprite != null ? sr.sprite : WhiteSquareSpriteCache.Get();
-            ssr.color = outlineCol;
-            ssr.sortingLayerID = 0;
-            ssr.sortingOrder = sr.sortingOrder - 1;
-        }
     }
 
     void BuildAimLine()
@@ -155,63 +131,6 @@ public class ArcherLocal : MonoBehaviour
         aimLine.sortingOrder  = 20;
     }
 
-    void ColorChild(string name, Color c)
-    {
-        var t = transform.Find(name);
-        if (t == null) return;
-        var sr = t.GetComponent<SpriteRenderer>();
-        if (sr != null) sr.color = c;
-    }
-
-    void NormalizeSortingLayers()
-    {
-        foreach (var sr in GetComponentsInChildren<SpriteRenderer>(true))
-        {
-            sr.sortingLayerID = 0; // Default layer
-
-            string n = sr.gameObject.name;
-
-            if (n.EndsWith("_Outline"))
-            {
-                string baseName = n.Replace("_Outline", "");
-                sr.sortingOrder = GetBodyPartOrder(baseName) - 1;
-                continue;
-            }
-
-            sr.sortingOrder = GetBodyPartOrder(n);
-        }
-    }
-
-    int GetBodyPartOrder(string name)
-    {
-        switch (name)
-        {
-            case "LegL": case "LegR": case "Legs": case "Pants": return 5;
-            case "Body":                                          return 6;
-            case "ArmBack":                                       return 4;
-            case "ArmFront":                                      return 7;
-            case "Head":                                          return 8;
-            case "Hair":                                          return 9;
-            case "BowShaft": case "BowTip_Top": case "BowTip_Bot": return 10;
-            default:                                              return 7;
-        }
-    }
-
-    void HideBodyPartRenderers()
-    {
-        foreach (var name in BodyPartNames)
-        {
-            var t = transform.Find(name);
-            if (t != null)
-            {
-                var sr = t.GetComponent<SpriteRenderer>();
-                if (sr != null) sr.enabled = false;
-            }
-        }
-        foreach (var sr in GetComponentsInChildren<SpriteRenderer>(true))
-            sr.enabled = false;
-    }
-
     /// <summary>Called by TouchControls and AIController every frame while dragging/holding.</summary>
     public void SetAimAndCharge(Vector2 aimDir, float chargeRatio01)
     {
@@ -226,15 +145,35 @@ public class ArcherLocal : MonoBehaviour
         }
     }
 
+    /// <summary>Set ONLY the aim direction (does not touch the charge). Used by the
+    /// continuous pendulum sway so it never clobbers the player's charge level.</summary>
+    public void SetAimDirection(Vector2 aimDir)
+    {
+        if (aimDir.sqrMagnitude > 0.001f)
+            aimDirInput = aimDir.normalized;
+        if (arrowSpawnPoint != null)
+        {
+            float angle = Mathf.Atan2(aimDirInput.y, aimDirInput.x) * Mathf.Rad2Deg;
+            arrowSpawnPoint.rotation = Quaternion.Euler(0, 0, angle);
+        }
+    }
+
     void Update()
     {
         if (isDead) return;
+
+        // Continuous arm bob - oscillates the aim angle up/down
+        bobPhase += Time.deltaTime * bobFrequency * Mathf.PI * 2f;
+        currentBobAngle = Mathf.Sin(bobPhase) * bobAmplitude;
+
         HandleCharge();
-        if (isPlayerControlled)
-            UpdateAimLine();
+        // Reference-style: no trajectory preview — reading the arc yourself is the
+        // skill. The bow/body lean shows the launch direction; that's the only cue.
+        if (aimLine != null && aimLine.positionCount != 0)
+            aimLine.positionCount = 0;
     }
 
-    // ── Charge / fire ────────────────────────────────────────────
+    // Charge / fire
     public void SetHoldInput(bool holding) => touchHoldInput = holding;
 
     void HandleCharge()
@@ -242,21 +181,9 @@ public class ArcherLocal : MonoBehaviour
 #if UNITY_EDITOR
         if (isPlayerControlled)
         {
-            if (Input.GetKey(KeyCode.Space))
-            {
-                float hInput = Input.GetAxis("Horizontal");
-                float vInput = Input.GetAxisRaw("Vertical");
-                Vector2 kbDir = new Vector2(playerIndex == 2 ? -1f : 1f, 0.5f);
-                if (hInput != 0 || vInput != 0)
-                    kbDir = new Vector2(hInput, vInput).normalized;
-                float kbCharge = Mathf.Clamp01(chargeTimer / maxChargeTime);
-                SetAimAndCharge(kbDir, kbCharge);
-                touchHoldInput = true;
-            }
-            else if (Input.GetKeyUp(KeyCode.Space))
-            {
-                touchHoldInput = false;
-            }
+            // Aim comes from the continuous sway; Space just charges (hold = power).
+            if (Input.GetKeyDown(KeyCode.Space)) touchHoldInput = true;
+            if (Input.GetKeyUp(KeyCode.Space))   touchHoldInput = false;
         }
 #endif
 
@@ -266,24 +193,32 @@ public class ArcherLocal : MonoBehaviour
         {
             isCharging  = true;
             chargeTimer = 0f;
-            animator?.SetBool("IsCharging", true);
+            if (animator != null) animator.SetBool("IsCharging", true);
             AudioManager.Instance?.PlayBowDraw();
         }
         if (isCharging && holdInput)
         {
+            // Hold longer = more power (faster arrow). currentChargeRatio drives both the
+            // launch force and the charge-meter fill.
             chargeTimer += Time.deltaTime;
-            float ratio = Mathf.Clamp01(chargeTimer / maxChargeTime);
+            currentChargeRatio = Mathf.Clamp01(chargeTimer / maxChargeTime);
             if (isPlayerControlled)
-                UIManager.Instance?.UpdateChargeMeter(ratio);
+                UIManager.Instance?.UpdateChargeMeter(currentChargeRatio);
         }
         if (isCharging && !holdInput)
         {
             if (chargeTimer > 0.02f)
+            {
                 FireArrow();
+                if (spriteController == null)
+                    spriteController = GetComponent<ArcherSpriteController>();
+                if (spriteController != null)
+                    spriteController.TriggerFireAnimation();
+            }
             isCharging = false;
             chargeTimer = 0f;
             currentChargeRatio = 0f;
-            animator?.SetBool("IsCharging", false);
+            if (animator != null) animator.SetBool("IsCharging", false);
             if (isPlayerControlled)
                 UIManager.Instance?.UpdateChargeMeter(0f);
             AudioManager.Instance?.PlayArrowFire();
@@ -292,21 +227,21 @@ public class ArcherLocal : MonoBehaviour
 
     void FireArrow()
     {
-        float ratio = Mathf.Clamp01(chargeTimer / maxChargeTime);
+        // Charge-based power: longer hold = faster arrow (reference feel). A quick tap
+        // still throws a weak projectile.
+        float ratio = Mathf.Clamp01(currentChargeRatio);
         float force = Mathf.Lerp(minLaunchForce, maxLaunchForce, ratio);
 
-        Vector2 dir = aimDirInput.sqrMagnitude > 0.001f
-            ? aimDirInput.normalized
-            : new Vector2(playerIndex == 2 ? -1f : 1f, 0.5f).normalized;
-
-        Vector3 spawnPos = arrowSpawnPoint != null ? arrowSpawnPoint.position : transform.position;
+        Vector2 dir = GetCurrentLaunchDirection();
+        Vector3 spawnPos = GetCurrentLaunchPosition(dir);
 
         GameObject arrowObj = null;
 
         // Try instantiating from prefab first
         if (arrowLocalPrefab != null)
         {
-            arrowObj = Instantiate(arrowLocalPrefab, spawnPos, Quaternion.identity);
+            arrowObj = Instantiate(arrowLocalPrefab, spawnPos, Quaternion.Euler(0, 0,
+                Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg));
         }
         else
         {
@@ -315,10 +250,10 @@ public class ArcherLocal : MonoBehaviour
             arrowObj = new GameObject("Arrow_Runtime");
             arrowObj.transform.position = spawnPos;
 
-            // Visual: thin brown shaft
+            // Visual: clean procedural arrow shaft
             var sr = arrowObj.AddComponent<SpriteRenderer>();
             sr.sprite = WhiteSquareSpriteCache.Get();
-            sr.color = new Color(0.55f, 0.35f, 0.15f);
+            sr.color = new Color(0.85f, 0.75f, 0.55f); // Light wooden brown
             arrowObj.transform.localScale = new Vector3(0.5f, 0.06f, 1f);
             sr.sortingOrder = 10;
 
@@ -341,7 +276,6 @@ public class ArcherLocal : MonoBehaviour
         if (arrowLocal != null)
         {
             arrowLocal.Launch(dir * force, playerIndex);
-            Debug.Log($"[ArcherLocal] Arrow fired! Dir={dir}, Force={force}, Ratio={ratio}");
         }
         else
         {
@@ -351,6 +285,43 @@ public class ArcherLocal : MonoBehaviour
                 arb2.AddForce(dir * force, ForceMode2D.Impulse);
             Destroy(arrowObj, 4f);
         }
+    }
+
+    Vector2 GetCurrentLaunchDirection()
+    {
+        // Use the aim vector set by BowSwayController, AI, or keyboard input.
+        if (aimDirInput.sqrMagnitude > 0.001f)
+            return aimDirInput.normalized;
+
+        Vector2 baseDirection = playerIndex == 2 ? Vector2.left : Vector2.right;
+        float bodyRotation = transform.eulerAngles.z;
+        if (bodyRotation > 180f) bodyRotation -= 360f;
+        return ((Vector2)(Quaternion.Euler(0f, 0f, bodyRotation) * (Vector3)baseDirection)).normalized;
+    }
+
+    Vector3 GetCurrentLaunchPosition(Vector2 direction)
+    {
+        // Arrows leave from the centre of the bow/gun (the sprite/body centre), nudged a
+        // little along the aim so they clear the archer's own collider.
+        Vector3 bowCenter = GetAimPreviewOrigin();
+        return bowCenter + (Vector3)(direction.normalized * 0.45f);
+    }
+
+    Vector3 GetAimPreviewOrigin()
+    {
+        Transform sprite = transform.Find("__Sprite");
+        if (sprite != null)
+        {
+            var sr = sprite.GetComponent<SpriteRenderer>();
+            if (sr != null && sr.enabled && sr.sprite != null)
+                return sr.bounds.center;
+        }
+
+        var bodyCollider = GetComponent<Collider2D>();
+        if (bodyCollider != null)
+            return bodyCollider.bounds.center;
+
+        return transform.position + Vector3.up * 0.7f;
     }
 
     void UpdateAimLine()
@@ -368,8 +339,9 @@ public class ArcherLocal : MonoBehaviour
         float g      = Physics2D.gravity.magnitude * gravityScale;
         // Include wind force for honest preview
         float windAccel = WindSystem.Instance != null ? WindSystem.Instance.windForce : 0f;
-        Vector2 v0   = aimDirInput.normalized * speed;
-        Vector3 spawn = arrowSpawnPoint != null ? arrowSpawnPoint.position : transform.position;
+        Vector2 launchDir = GetCurrentLaunchDirection();
+        Vector2 v0   = launchDir * speed;
+        Vector3 spawn = GetAimPreviewOrigin();
 
         int count = aimLineSteps;
         aimLine.positionCount = count;
@@ -388,7 +360,7 @@ public class ArcherLocal : MonoBehaviour
         }
     }
 
-    // ── Health / Damage / Respawn ─────────────────────────────────
+    // Health / Damage / Respawn
 
     /// <summary>Called by ArrowLocal or HitZone. damage is 0-100 percentage points.</summary>
     public void OnHitReceived(int shooterPlayerIndex, float damage = 34f)
@@ -396,22 +368,50 @@ public class ArcherLocal : MonoBehaviour
         if (isDead) return;
         currentHealth = Mathf.Max(0f, currentHealth - damage);
         UIManager.Instance?.SetPlayerHealth(playerIndex, currentHealth, maxHealth);
+        healthBar?.SetHealth(currentHealth, maxHealth);
         StartCoroutine(ShowHitHeart());
 
         var hitFlash = GetComponent<HitFlash>();
         if (hitFlash == null) hitFlash = gameObject.AddComponent<HitFlash>();
         hitFlash.Flash();
 
+        Vector2 hitDir = lastHitForce.sqrMagnitude > 0.001f
+            ? (Vector2)lastHitForce.normalized
+            : new Vector2(playerIndex == 1 ? 1f : -1f, 0f);
+        float strength = Mathf.Clamp(damage / 34f, 0.6f, 2f);
+
+        // Physical flinch in the arrow's travel direction, scaled by damage so a
+        // headshot rocks the body harder than a graze.
+        if (currentHealth > 0f)
+        {
+            if (spriteController == null) spriteController = GetComponent<ArcherSpriteController>();
+            spriteController?.TriggerHitReaction(hitDir, strength);
+            // NOTE: no physical rigidbody knockback on non-fatal hits — repeated hits
+            // could slide an archer off its platform. The strong flinch animation sells
+            // the impact, and the death tumble provides the dramatic physics moment.
+        }
+
         Color dmgColor = playerIndex == 1 ? new Color(0.85f, 0.2f, 0.2f) : new Color(0.2f, 0.4f, 0.85f);
         DamageNumber.Spawn(Mathf.RoundToInt(damage), transform.position + Vector3.up * 0.8f, dmgColor);
 
-        if (playerIndex == 1)
-            CameraShaker.Instance?.ShakeHit();
+        // Confetti pop on the body (reference-style hit feedback).
+        HitConfetti.Burst(transform.position + Vector3.up * 0.8f, strength);
+
+        // Punchy impact feedback for every hit, regardless of which side took it.
+        CameraShaker.Instance?.ShakeHit();
+        CameraShaker.Instance?.HitStop(0.05f, 0.08f);
+
+        PostFXTriggers.Instance?.OnHit();
 
         if (currentHealth <= 0f)
         {
             isDead = true;
+            healthBar?.Show(false);
             TriggerRagdoll();
+            // Bigger freeze + shake on the kill for a satisfying finish.
+            CameraShaker.Instance?.HitStop(0.10f, 0.04f);
+            CameraShaker.Instance?.ShakeKill();
+            PostFXTriggers.Instance?.OnRoundEnd();
             PracticeGameManager.Instance?.RecordKill(shooterPlayerIndex);
         }
     }
@@ -425,41 +425,117 @@ public class ArcherLocal : MonoBehaviour
 
     public void Respawn()
     {
+        // Clean up active ragdoll parts before re-activating the archer
+        var ragdoll = GetComponent<Ragdoll2D>();
+        if (ragdoll != null)
+        {
+            ragdoll.ForceCleanup();
+            Destroy(ragdoll);
+        }
+
         isDead        = false;
         currentHealth = maxHealth;
 
+        // Re-enable the body collider the death disabled (needed before AlignFeetTo,
+        // which reads collider bounds).
+        var bodyCol = GetComponent<Collider2D>();
+        if (bodyCol != null) bodyCol.enabled = true;
+
+        // Reset rotation BEFORE computing foot alignment - collider bounds depend on it
+        transform.rotation = Quaternion.identity;
+
         string spawnName = playerIndex == 1 ? "Player1Spawn" : "Player2Spawn";
         var spawnGO = GameObject.Find(spawnName);
+        Vector3 target;
         if (spawnGO != null)
-            transform.position = spawnGO.transform.position;
+            target = spawnGO.transform.position;
         else if (spawnPosition != Vector3.zero)
-            transform.position = spawnPosition;
+            target = spawnPosition;
         else
-            transform.position = playerIndex == 1
+            target = playerIndex == 1
                 ? new Vector3(-3.5f, 1f, 0)
                 : new Vector3( 3.5f, 1f, 0);
 
-        if (rb != null) { rb.velocity = Vector2.zero; rb.angularVelocity = 0; rb.WakeUp(); }
+        transform.position = SpawnAlignment.AlignFeetTo(gameObject, target);
+
+        if (rb != null)
+        {
+            rb.isKinematic     = false;
+            rb.simulated       = true;
+            rb.velocity        = Vector2.zero;
+            rb.angularVelocity = 0f;
+            // Restore the original rigidbody tuning the death tumble overrode.
+            rb.mass        = _rbMass;
+            rb.gravityScale = _rbGravity;
+            rb.drag        = _rbDrag;
+            rb.angularDrag = _rbAngularDrag;
+            // Restore upright stance after a death tumble (which unfroze rotation).
+            rb.constraints     = RigidbodyConstraints2D.FreezeRotation;
+            rb.rotation        = 0f;
+            rb.WakeUp();
+        }
+        spriteController?.SetRagdollMode(false);
+        // Show the single sprite again (the death hid it for the articulated ragdoll).
+        spriteController?.SetBodyVisible(true);
+
         chargeTimer        = 0f;
         isCharging         = false;
         touchHoldInput     = false;
         currentChargeRatio = 0f;
         aimDirInput        = new Vector2(playerIndex == 2 ? -1f : 1f, 0.5f);
+
+        // Reinitialise sprite controller so the idle sprite shows immediately
+        // and any stale ragdoll child renderers are hidden
+        if (spriteController != null)
+            spriteController.Setup(playerIndex, EffectiveCharacterIndex());
+
         UIManager.Instance?.SetPlayerHealth(playerIndex, currentHealth, maxHealth);
+        healthBar?.Show(true);
+        healthBar?.SetHealth(currentHealth, maxHealth);
         if (isPlayerControlled)
             UIManager.Instance?.UpdateChargeMeter(0f);
     }
 
     public void TriggerRagdoll()
     {
-        animator?.SetTrigger("Ragdoll");
+        if (animator != null) animator.SetTrigger("Ragdoll");
+
+        // Articulated ragdoll death: hide the live single sprite, park the archer body
+        // so it doesn't interfere, and spawn a jointed multi-part skeleton that launches,
+        // flails on its joints and tumbles off the platforms — the reference game's
+        // signature floppy death.
+        if (spriteController == null) spriteController = GetComponent<ArcherSpriteController>();
+        spriteController?.SetBodyVisible(false);
+
+        var bodyCol = GetComponent<Collider2D>();
+        if (bodyCol != null) bodyCol.enabled = false;
+        if (rb != null)
+        {
+            rb.velocity        = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated       = false; // freeze the (now hidden) archer body
+        }
+
+        // Launch impulse derived from the killing blow.
+        Vector3 force = lastHitForce * 2.2f;
+        if (force.sqrMagnitude < 9f)
+            force = new Vector3(playerIndex == 1 ? 5f : -5f, 4f, 0f);
+        force.y += 5f; // upward pop so the body launches into a heavy arc
 
         var ragdoll = GetComponent<Ragdoll2D>();
         if (ragdoll == null) ragdoll = gameObject.AddComponent<Ragdoll2D>();
-        ragdoll.Activate(lastHitForce, lastHitPoint != Vector3.zero ? lastHitPoint : transform.position);
+        Vector3 hitPt = lastHitPoint != Vector3.zero ? lastHitPoint : transform.position + Vector3.up * 0.8f;
+        ragdoll.Activate(force, hitPt);
+    }
 
-        // Hide body-part child sprites so ragdoll parts are the only visuals
-        HideBodyPartRenderers();
+    /// <summary>Character art index (0 = Adventurer, 1 = Soldier) — used by Ragdoll2D for tint.</summary>
+    public int CharacterIndex => EffectiveCharacterIndex();
+
+    int EffectiveCharacterIndex()
+    {
+        if (selectedCharacterIndex >= 0)
+            return Mathf.Clamp(selectedCharacterIndex, 0, 1);
+        return playerIndex == 2 ? 1 : 0;
     }
 
     IEnumerator ShowHitHeart()

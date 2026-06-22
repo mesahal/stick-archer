@@ -4,7 +4,7 @@ public static class GameMode
     public enum AIDifficulty { Easy, Normal, Hard }
 
     public static Mode Current = Mode.Online;
-    public static AIDifficulty Difficulty = AIDifficulty.Normal;
+    public static AIDifficulty Difficulty = AIDifficulty.Hard;
 
     public static bool IsPractice => Current == Mode.Practice;
 }

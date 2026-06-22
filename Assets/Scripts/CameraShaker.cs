@@ -127,4 +127,35 @@ public class CameraShaker : MonoBehaviour
         if (cameraTransform != null)
             cameraTransform.localPosition = originalPos;
     }
+
+    // ── Hit-stop (impact freeze-frame) ──────────────────────────────
+
+    private Coroutine _hitStopCo;
+
+    /// <summary>
+    /// Briefly slows time for a punchy impact, then restores it. Real-time based so
+    /// it works regardless of the current timeScale. Safe to call repeatedly.
+    /// </summary>
+    public void HitStop(float duration = 0.06f, float timeScale = 0.05f)
+    {
+        // Don't fight a paused game (timeScale 0 = pause menu).
+        if (Time.timeScale == 0f) return;
+        if (_hitStopCo != null) StopCoroutine(_hitStopCo);
+        _hitStopCo = StartCoroutine(HitStopRoutine(duration, timeScale));
+    }
+
+    IEnumerator HitStopRoutine(float duration, float scale)
+    {
+        Time.timeScale = Mathf.Clamp01(scale);
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            // Bail out if something paused the game mid-freeze.
+            if (Time.timeScale == 0f) { _hitStopCo = null; yield break; }
+            yield return null;
+        }
+        Time.timeScale = 1f;
+        _hitStopCo = null;
+    }
 }

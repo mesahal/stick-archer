@@ -23,7 +23,6 @@ public class WindSystem : MonoBehaviour
     [Header("Visual Feedback")]
     public bool showWindIndicator = true;
     public RectTransform windArrow;
-    public TMPro.TextMeshProUGUI windText;
     
     private float baseGravity = 9.81f;
     
@@ -90,12 +89,9 @@ public class WindSystem : MonoBehaviour
             windArrow.localScale = Vector3.one * scale;
         }
         
-        // Update text
-        if (windText != null)
-        {
-            string direction = windForce > 0 ? "→" : "←";
-            windText.text = $"Wind: {direction} {Mathf.Abs(windForce):F1}";
-        }
+        // Route through UIManager: WindSystem is created at runtime, so a direct
+        // windText reference races UIManager.Start() and may never get wired.
+        UIManager.Instance?.UpdateWind(windForce);
     }
     
     void Update()
